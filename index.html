@@ -1355,7 +1355,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // ══ LOCALSTORAGE + SHEET TRACKING ══
+// ══ LOCALSTORAGE + SHEET TRACKING ══
   var SCRIPT_URL = 'https://script.google.com/a/macros/hanstonproperties.com/s/AKfycbzWNSlPkEQ-PAom66oHWZ2vGXyo6mpXXs8s7it-1EKTycbnbRoy4nUyqN4RKk2h3Oy4mw/exec';
   var LS_KEY = 'hanston_onboarding_v3';
 
@@ -1363,9 +1363,10 @@ document.addEventListener('DOMContentLoaded', () => {
     var name = (document.getElementById('sidebarName') || {textContent:''}).textContent.trim();
     if (!name || name === 'New Employee') return;
     var state = {
-      name: name,
+      name:  name,
       title: (document.getElementById('sidebarRole') || {textContent:''}).textContent.trim(),
-      division: (document.getElementById('sidebarDiv') || {textContent:''}).textContent.trim(),
+      prop:  (document.getElementById('sidebarProp')  || {textContent:''}).textContent.trim(),
+      dept:  (document.getElementById('sidebarDept')  || {textContent:''}).textContent.trim(),
       checks: {}
     };
     document.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
@@ -1382,30 +1383,29 @@ document.addEventListener('DOMContentLoaded', () => {
     try { state = JSON.parse(raw); } catch(e) { return false; }
     if (!state || !state.name || state.name === 'New Employee') return false;
 
-    // Hide setup modal
     var ov = document.getElementById('setupOverlay');
     if (ov) ov.style.display = 'none';
 
-    // Restore sidebar
     var av = document.getElementById('sidebarInitial');
     if (av) av.textContent = state.name.charAt(0).toUpperCase();
     var nm = document.getElementById('sidebarName');
     if (nm) nm.textContent = state.name;
     var rl = document.getElementById('sidebarRole');
-    if (rl) rl.textContent = state.title;
-    var dv = document.getElementById('sidebarDiv');
-    if (dv) dv.textContent = state.division;
+    if (rl) rl.textContent = state.title || '—';
+    var pr = document.getElementById('sidebarProp');
+    if (pr) pr.textContent = state.prop || '—';
+    var dt = document.getElementById('sidebarDept');
+    if (dt) dt.textContent = state.dept || '—';
 
-    // Pre-fill inputs
-    ['introName','buddyName','sigName','viN','bN','sigN'].forEach(function(id) {
+    ['introName','buddyName','sigName'].forEach(function(id) {
       var el = document.getElementById(id); if (el) el.placeholder = state.name;
     });
-    ['introRole','buddyRole','sigRole','viR','bR','sigR'].forEach(function(id) {
+    ['introRole','buddyRole','sigRole'].forEach(function(id) {
       var el = document.getElementById(id); if (el) el.placeholder = state.title;
     });
-    var sd = document.getElementById('sigDiv'); if(sd) sd.placeholder = (state.prop||'') + ' · ' + (state.dept||'');
+    var sd = document.getElementById('sigDiv');
+    if (sd) sd.placeholder = (state.prop || '') + ' · ' + (state.dept || '');
 
-    // Restore checkboxes
     if (state.checks) {
       Object.keys(state.checks).forEach(function(id) {
         var cb = document.getElementById(id);
@@ -1413,24 +1413,18 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Update progress bar
-    var upFn = typeof upd === 'function' ? upd : (typeof updateProgress === 'function' ? updateProgress : null);
-    if (upFn) upFn();
-
+    if (typeof updateProgress === 'function') updateProgress();
     return true;
   }
 
   function pingSheet(day) {
-    // Read all values from sidebar — these are set by startOnboarding() and loadState()
     var name  = (document.getElementById('sidebarName') || {textContent:''}).textContent.trim();
     var title = (document.getElementById('sidebarRole') || {textContent:''}).textContent.trim();
     var prop  = (document.getElementById('sidebarProp') || {textContent:''}).textContent.trim();
     var dept  = (document.getElementById('sidebarDept') || {textContent:''}).textContent.trim();
 
-    // Bail if employee hasn't set up yet
     if (!name || name === 'New Employee' || name === '—' || name === '') return;
 
-    // Quiz score for the day
     var quizMap = {'Day 1':'1','NetSuite':'ns','Day 2':'2','Day 3':null,'Day 4':'3','Week 2':'4'};
     var qKey = quizMap[day];
     var quizScore = '—';
@@ -1439,23 +1433,20 @@ document.addEventListener('DOMContentLoaded', () => {
       quizScore = qs.done > 0 ? qs.score + '/' + qs.total : 'Not attempted';
     }
 
-    // Overall progress
-    var all = document.querySelectorAll('input[type=checkbox]').length;
+    var all     = document.querySelectorAll('input[type=checkbox]').length;
     var checked = document.querySelectorAll('input[type=checkbox]:checked').length;
-    var pct = all > 0 ? Math.round(checked / all * 100) + '%' : '0%';
+    var pct     = all > 0 ? Math.round(checked / all * 100) + '%' : '0%';
 
     fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
+      method:  'POST',
+      mode:    'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: name, title: title, property: prop, department: dept,
-        day: day + ' completed', quiz: quizScore, progress: pct
+        day:  day + ' completed', quiz: quizScore, progress: pct
       })
     }).catch(function() {});
   }
-
-  // Load saved state on page load
 
 
 </script>
