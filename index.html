@@ -20,7 +20,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .employee-name{font-size:12.5px;font-weight:600;color:#fff;}
 .employee-role{font-size:10.5px;color:rgba(255,255,255,.45);margin-top:1px;}
 .employee-prop{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px;}
-.employee-dept{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px;}
+.employee-dept{font-size:10px;color:rgba(255,255,255,.28);margin-top:1px;}
 .progress-bar-wrap{margin-top:10px;}
 .progress-label{display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;}
 .progress-bar{height:4px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden;}
@@ -301,13 +301,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
     <div class="setup-field">
       <label class="setup-label">Property</label>
       <select class="setup-select" id="setupProp">
-        <option value="">Select your property…</option>
-        <option value="Hanston Building (Hanston Building (HB)">Hanston Building (HB)</option>
+        <option value="">Select your division…</option>
+        <option value="Hanston Building (Hanston Building (HB)">Hanston Building (Hanston Building (HB)</option>
         <option value="Hanston Square (HS)">Hanston Square (HS)</option>
-        <option value="North Bank (NB)">Northbank (NB)</option>
+        <option value="Northbank (NB)">Northbank (NB)</option>
+        <option value="People & Culture">People & Culture</option>
+        <option value="Finance">Finance</option>
+        <option value="Operations">Operations</option>
+        <option value="Leasing & Sales">Leasing & Sales</option>
+        <option value="Property Management">Property Management</option>
+      <option value="">Select your division…</option>
+        <option value="Hanston Building (HB)">Hanston Building (HB)</option>
+        <option value="Hanston Square (HS)">Hanston Square (HS)</option>
+        <option value="Northbank (NB)">Northbank (NB)</option>
       </select>
     </div>
-        <div class="setup-field">
+    <div class="setup-field">
       <label class="setup-label">Department</label>
       <select class="setup-select" id="setupDept">
         <option value="">Select your department…</option>
@@ -316,12 +325,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
         <option value="Building Operations - Engineering">Building Operations - Engineering</option>
         <option value="Building Operations - Maintenance">Building Operations - Maintenance</option>
         <option value="Construction Project Management Office">Construction Project Management Office</option>
-        <option value="Engineering Design and  Development - Engineering">Engineering Design and Development - Engineering</option>
+        <option value="Engineering Design and Development">Engineering Design and Development</option>
         <option value="Executive Office">Executive Office</option>
         <option value="Human Resources">Human Resources</option>
         <option value="Leasing">Leasing</option>
         <option value="Management">Management</option>
-        <option value="Purchasing"></option>
+        <option value="Purchasing">Purchasing</option>
       </select>
     </div>
     <button class="setup-btn" onclick="startOnboarding()">Start My Onboarding →</button>
@@ -338,8 +347,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
     <div class="employee-avatar" id="sidebarInitial">?</div>
     <div class="employee-name" id="sidebarName">New Employee</div>
     <div class="employee-role" id="sidebarRole">—</div>
-    <div class="employee-prop" id="sidebarDiv">—</div>
-    <div class="employee-dept" id="sidebarDiv">—</div>
+    <div class="employee-prop" id="sidebarProp">—</div>
+    <div class="employee-dept" id="sidebarDept">—</div>
     <div class="progress-bar-wrap">
       <div class="progress-label"><span>Progress</span><span id="progressPct">0%</span></div>
       <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
@@ -908,7 +917,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
       <div class="summary-section-title">Employee Details</div>
       <div class="summary-row"><span class="summary-key">Full Name</span><span class="summary-val" id="sum-name">—</span></div>
       <div class="summary-row"><span class="summary-key">Official Job Title</span><span class="summary-val" id="sum-title">—</span></div>
-      <div class="summary-row"><span class="summary-key">Division / Property</span><span class="summary-val" id="sum-div">—</span></div>
+      <div class="summary-row"><span class="summary-key">Property</span><span class="summary-val" id="sum-prop">—</span></div>
+      <div class="summary-row"><span class="summary-key">Department</span><span class="summary-val" id="sum-dept">—</span></div>
       <div class="summary-row"><span class="summary-key">Overall Progress</span><span class="summary-val" id="sum-pct">0%</span></div>
     </div>
 
@@ -948,7 +958,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
       <div style="font-family:'Libre Baskerville',serif;font-size:15px;color:var(--navy);font-weight:700;margin-bottom:6px;">Hanston Properties</div>
       <div style="display:flex;justify-content:center;gap:3px;margin-bottom:6px;font-size:11px;color:var(--text-muted);">├──────┬──────┤</div>
       <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:10px;">
-        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--navy);">Hanston Building (Hanston Building (HB)</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--navy);">Hanston Building (HB)</div>
         <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--navy);">Hanston Square (HS)</div>
         <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--navy);">Northbank (NB)</div>
       </div>
@@ -1114,22 +1124,25 @@ function answerQuiz(num, qi, choice) {
 
 // ── SETUP ──
 function startOnboarding() {
-  const name = document.getElementById('setupName').value.trim();
-  const title = document.getElementById('setupTitle').value.trim();
-  const prop = document.getElementById('setupProp').value;
-  const dept = document.getElementById('setupDept').value;
-  if (!name || !title || !div) { alert('Please fill in all fields to continue.'); return; }
+  var name = document.getElementById('setupName').value.trim();
+  var title = document.getElementById('setupTitle').value.trim();
+  var prop = document.getElementById('setupProp').value;
+  var dept = document.getElementById('setupDept').value;
+  if (!name || !title || !prop || !dept) {
+    alert('Please fill in all fields to continue.');
+    return;
+  }
   document.getElementById('setupOverlay').style.display = 'none';
+  document.getElementById('sidebarInitial').textContent = name.charAt(0).toUpperCase();
   document.getElementById('sidebarName').textContent = name;
   document.getElementById('sidebarRole').textContent = title;
-  document.getElementById('sidebarDiv').textContent = div;
-  document.getElementById('sidebarInitial').textContent = name.charAt(0).toUpperCase();
-  // Pre-fill template inputs
-  ['introName','buddyName','sigName'].forEach(id => { const el = document.getElementById(id); if(el) el.placeholder = name; });
-  ['introRole','buddyRole','sigRole'].forEach(id => { const el = document.getElementById(id); if(el) el.placeholder = title; });
-  const sigDivEl = document.getElementById('sigDiv'); if(sigDivEl) sigDivEl.placeholder = div;
-  updateSummary();
+  document.getElementById('sidebarProp').textContent = prop;
+  document.getElementById('sidebarDept').textContent = dept;
+  ['introName','buddyName','sigName'].forEach(function(id){ var el=document.getElementById(id); if(el) el.placeholder=name; });
+  ['introRole','buddyRole','sigRole'].forEach(function(id){ var el=document.getElementById(id); if(el) el.placeholder=title; });
+  var sigDivEl = document.getElementById('sigDiv'); if(sigDivEl) sigDivEl.placeholder = prop + ' · ' + dept;
   saveState();
+  updateSummary();
 }
 
 // ── PANEL NAV ──
@@ -1219,7 +1232,8 @@ function renderSummaryChecks(items, containerId) {
 function updateSummary() {
   document.getElementById('sum-name').textContent = document.getElementById('sidebarName').textContent;
   document.getElementById('sum-title').textContent = document.getElementById('sidebarRole').textContent;
-  document.getElementById('sum-div').textContent = document.getElementById('sidebarDiv').textContent;
+  var sp2=document.getElementById('sidebarProp'); if(sp2 && document.getElementById('sum-prop')) document.getElementById('sum-prop').textContent=sp2.textContent;
+  var sd2=document.getElementById('sidebarDept'); if(sd2 && document.getElementById('sum-dept')) document.getElementById('sum-dept').textContent=sd2.textContent;
   const all = document.querySelectorAll('input[type="checkbox"]').length;
   const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
   document.getElementById('sum-pct').textContent = Math.round((checked/all)*100) + '%';
@@ -1355,12 +1369,12 @@ document.addEventListener('DOMContentLoaded', () => {
   var LS_KEY = 'hanston_onboarding_v3';
 
   function saveState() {
-    var name = (document.getElementById('sidebarName') || {}).textContent || '';
+    var name = (document.getElementById('sidebarName') || {textContent:''}).textContent.trim();
     if (!name || name === 'New Employee') return;
     var state = {
       name: name,
-      title: (document.getElementById('sidebarRole') || {}).textContent || '',
-      division: (document.getElementById('sidebarDiv') || {}).textContent || '',
+      title: (document.getElementById('sidebarRole') || {textContent:''}).textContent.trim(),
+      division: (document.getElementById('sidebarDiv') || {textContent:''}).textContent.trim(),
       checks: {}
     };
     document.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
@@ -1382,13 +1396,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ov) ov.style.display = 'none';
 
     // Restore sidebar
-    var av = document.getElementById('sidebarInitial') || document.getElementById('sAvatar');
+    var av = document.getElementById('sidebarInitial');
     if (av) av.textContent = state.name.charAt(0).toUpperCase();
-    var nm = document.getElementById('sidebarName') || document.getElementById('sNameD');
+    var nm = document.getElementById('sidebarName');
     if (nm) nm.textContent = state.name;
-    var rl = document.getElementById('sidebarRole') || document.getElementById('sRoleD');
+    var rl = document.getElementById('sidebarRole');
     if (rl) rl.textContent = state.title;
-    var dv = document.getElementById('sidebarDiv') || document.getElementById('sDivD');
+    var dv = document.getElementById('sidebarDiv');
     if (dv) dv.textContent = state.division;
 
     // Pre-fill inputs
@@ -1398,9 +1412,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ['introRole','buddyRole','sigRole','viR','bR','sigR'].forEach(function(id) {
       var el = document.getElementById(id); if (el) el.placeholder = state.title;
     });
-    ['sigDiv','sigDv'].forEach(function(id) {
-      var el = document.getElementById(id); if (el) el.placeholder = state.division;
-    });
+    var sd = document.getElementById('sigDiv'); if(sd) sd.placeholder = (state.prop||'') + ' · ' + (state.dept||'');
 
     // Restore checkboxes
     if (state.checks) {
@@ -1418,13 +1430,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function pingSheet(day) {
-    var nameEl = document.getElementById('sidebarName') || document.getElementById('sNameD');
-    var titleEl = document.getElementById('sidebarRole') || document.getElementById('sRoleD');
-    var divEl = document.getElementById('sidebarDiv') || document.getElementById('sDivD');
-    var name = nameEl ? nameEl.textContent : '';
-    var title = titleEl ? titleEl.textContent : '';
-    var division = divEl ? divEl.textContent : '';
-    if (!name || name === 'New Employee' || name === '—') return;
+    // Read all values from sidebar — these are set by startOnboarding() and loadState()
+    var name  = (document.getElementById('sidebarName') || {textContent:''}).textContent.trim();
+    var title = (document.getElementById('sidebarRole') || {textContent:''}).textContent.trim();
+    var prop  = (document.getElementById('sidebarProp') || {textContent:''}).textContent.trim();
+    var dept  = (document.getElementById('sidebarDept') || {textContent:''}).textContent.trim();
+
+    // Bail if employee hasn't set up yet
+    if (!name || name === 'New Employee' || name === '—' || name === '') return;
 
     // Quiz score for the day
     var quizMap = {'Day 1':'1','NetSuite':'ns','Day 2':'2','Day 3':null,'Day 4':'3','Week 2':'4'};
@@ -1445,7 +1458,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: name, title: title, division: division,
+        name: name, title: title, property: prop, department: dept,
         day: day + ' completed', quiz: quizScore, progress: pct
       })
     }).catch(function() {});
