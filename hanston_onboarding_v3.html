@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanston Onboarding Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#19315B;--navy-light:#243f72;--navy-dark:#0f1e38;--cream:#F5F0E8;--cream-dark:#EDE6D6;--red:#C0392B;--gold:#C9A84C;--text:#1a1a2e;--text-muted:#5a6277;--white:#ffffff;--border:#ddd5c4;--success:#2d7a4f;--success-bg:#eaf5ee;--shadow:0 4px 24px rgba(25,49,91,.10);--shadow-lg:0 12px 48px rgba(25,49,91,.16);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:0;width:272px;height:100vh;background:var(--navy);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sidebar-logo{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,.1);}
+.sidebar-logo .brand{font-family:'Libre Baskerville',serif;font-size:17px;color:#fff;letter-spacing:.04em;font-weight:700;}
+.sidebar-logo .sub{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.12em;text-transform:uppercase;margin-top:3px;}
+.employee-card{margin:16px 14px;background:rgba(255,255,255,.07);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,.1);}
+.employee-avatar{width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-size:16px;color:var(--navy);font-weight:700;margin-bottom:8px;}
+.employee-name{font-size:12.5px;font-weight:600;color:#fff;}
+.employee-role{font-size:10.5px;color:rgba(255,255,255,.45);margin-top:1px;}
+.employee-div{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px;}
+.progress-bar-wrap{margin-top:10px;}
+.progress-label{display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;}
+.progress-bar{height:4px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--gold);border-radius:4px;transition:width .6s ease;}
+.nav-section{padding:6px 0;}
+.nav-section-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:10px 24px 4px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 24px;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;color:rgba(255,255,255,.55);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;transition:all .2s;position:relative;}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.1);color:#fff;font-weight:600;}
+.nav-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);}
+.nav-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;border:1.5px solid rgba(255,255,255,.2);}
+.nav-dot.done{background:var(--success);border-color:var(--success);color:#fff;}
+.nav-dot.active{background:var(--gold);border-color:var(--gold);color:var(--navy);}
+.nav-dot.locked{background:transparent;color:rgba(255,255,255,.3);border-color:rgba(255,255,255,.15);}
+.nav-badge{margin-left:auto;font-size:8.5px;background:rgba(201,168,76,.2);color:var(--gold);padding:2px 6px;border-radius:8px;letter-spacing:.06em;text-transform:uppercase;}
+
+/* MAIN */
+.main{margin-left:272px;min-height:100vh;}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.topbar-breadcrumb{font-size:12px;color:var(--text-muted);}
+.topbar-breadcrumb strong{color:var(--navy);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.day-badge{background:var(--navy);color:#fff;font-size:10px;font-weight:600;padding:5px 12px;border-radius:16px;letter-spacing:.06em;text-transform:uppercase;}
+
+/* PANELS */
+.panel{display:none;padding:40px;max-width:880px;}
+.panel.active{display:block;animation:fadeInUp .3s ease;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.panel-header{margin-bottom:30px;}
+.panel-eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:7px;}
+.panel-title{font-family:'Libre Baskerville',serif;font-size:30px;color:var(--navy);line-height:1.2;font-weight:700;}
+.panel-title em{color:var(--gold);font-style:italic;}
+.panel-desc{margin-top:10px;font-size:14.5px;color:var(--text-muted);max-width:580px;line-height:1.65;}
+
+/* CARDS */
+.card{background:#fff;border-radius:14px;padding:26px 28px;border:1px solid var(--border);margin-bottom:18px;box-shadow:var(--shadow);}
+.card-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:18px;}
+.card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.card-icon.navy{background:rgba(25,49,91,.08);}
+.card-icon.gold{background:rgba(201,168,76,.12);}
+.card-icon.red{background:rgba(192,57,43,.08);}
+.card-icon.green{background:rgba(45,122,79,.08);}
+.card-icon.purple{background:rgba(102,92,172,.1);}
+.card-title{font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:2px;}
+.card-subtitle{font-size:11.5px;color:var(--text-muted);}
+
+/* CHECKLIST */
+.checklist{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border-radius:8px;transition:background .15s;}
+.check-item:hover{background:var(--cream);}
+.check-item input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:17px;height:17px;border:2px solid var(--border);border-radius:5px;cursor:pointer;flex-shrink:0;margin-top:2px;transition:all .2s;position:relative;}
+.check-item input[type="checkbox"]:checked{background:var(--navy);border-color:var(--navy);}
+.check-item input[type="checkbox"]:checked::after{content:'✓';position:absolute;top:-1px;left:1px;font-size:10px;color:#fff;font-weight:700;}
+.check-item label{font-size:13.5px;color:var(--text);cursor:pointer;line-height:1.5;}
+.check-item input:checked~label{color:var(--text-muted);text-decoration:line-through;}
+
+/* BUTTONS */
+.link-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:8px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;transition:all .2s;border:none;letter-spacing:.02em;}
+.link-btn.primary{background:var(--navy);color:#fff;}
+.link-btn.primary:hover{background:var(--navy-light);}
+.link-btn.gold-btn{background:var(--gold);color:var(--navy);}
+.link-btn.gold-btn:hover{background:#d4a830;}
+.link-btn.outline{background:transparent;color:var(--navy);border:1.5px solid var(--navy);}
+.link-btn.outline:hover{background:var(--navy);color:#fff;}
+.link-btn.viber{background:#665CAC;color:#fff;}
+.link-btn.viber:hover{background:#564e9a;}
+.link-btn.green{background:var(--success);color:#fff;}
+.link-btn.green:hover{background:#256040;}
+.link-btn.red-btn{background:var(--red);color:#fff;}
+
+/* TOOL GRID */
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.tool-card{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px;transition:all .2s;}
+.tool-card:hover{border-color:var(--navy);background:#fff;box-shadow:var(--shadow);transform:translateY(-1px);}
+.tool-icon{font-size:26px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:9px;flex-shrink:0;}
+.tool-name{font-weight:600;font-size:13px;color:var(--navy);}
+.tool-desc{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+/* VIBER */
+.viber-group{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--cream);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
+.viber-group-left{display:flex;align-items:center;gap:10px;}
+.viber-group-icon{width:34px;height:34px;border-radius:50%;background:#665CAC;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;}
+.viber-group-name{font-size:13px;font-weight:600;color:var(--navy);}
+.viber-group-sub{font-size:10.5px;color:var(--text-muted);margin-top:1px;}
+
+/* TEMPLATE BOX */
+.template-box{background:rgba(25,49,91,.04);border:1.5px dashed var(--navy);border-radius:10px;padding:14px 18px;margin:12px 0;}
+.template-label{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);font-weight:600;margin-bottom:7px;opacity:.6;}
+.template-text{font-size:13.5px;color:var(--text);line-height:1.65;}
+.template-input{display:inline-block;border:none;border-bottom:1.5px solid var(--navy);background:transparent;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--navy);font-weight:600;min-width:90px;outline:none;padding:0 2px;}
+.template-input::placeholder{color:#aab3c8;font-weight:400;}
+.copy-btn{display:inline-flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:10.5px;font-family:'DM Sans',sans-serif;color:var(--text-muted);cursor:pointer;margin-top:8px;transition:all .15s;}
+.copy-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* TIMELINE */
+.timeline-item{display:flex;gap:14px;padding-bottom:20px;position:relative;}
+.timeline-item:not(:last-child)::after{content:'';position:absolute;left:18px;top:38px;bottom:0;width:1px;background:var(--border);}
+.timeline-dot{width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;position:relative;z-index:1;}
+.timeline-content{flex:1;}
+.timeline-time{font-size:10px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;}
+.timeline-title{font-weight:600;font-size:14px;color:var(--navy);margin-bottom:3px;}
+.timeline-desc{font-size:12.5px;color:var(--text-muted);line-height:1.6;}
+
+/* PILLARS GRID */
+.pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.pillar-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;transition:all .2s;cursor:pointer;}
+.pillar-card:hover{border-color:var(--navy);box-shadow:var(--shadow);transform:translateY(-2px);}
+.pillar-emoji{font-size:26px;margin-bottom:7px;}
+.pillar-name{font-size:11px;font-weight:700;color:var(--navy);letter-spacing:.06em;text-transform:uppercase;}
+.pillar-sub{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
+
+/* NOTE */
+.note-box{background:#fff9ed;border:1px solid #e8d9a0;border-left:3px solid var(--gold);border-radius:8px;padding:12px 14px;font-size:12.5px;color:#6b5a2a;line-height:1.6;margin:14px 0;}
+.note-box strong{color:#5a4a1a;}
+.info-box{background:rgba(25,49,91,.05);border:1px solid rgba(25,49,91,.12);border-left:3px solid var(--navy);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--navy);line-height:1.6;margin:14px 0;}
+
+.action-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.divider{height:1px;background:var(--border);margin:20px 0;}
+
+/* BUDDY */
+.buddy-card{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);border-radius:14px;padding:24px;color:#fff;display:flex;align-items:center;gap:18px;margin-bottom:18px;}
+.buddy-avatar{width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--navy);font-weight:700;font-family:'Libre Baskerville',serif;flex-shrink:0;}
+.buddy-info{flex:1;}
+.buddy-title{font-size:10px;opacity:.5;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.buddy-name{font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;}
+.buddy-role{font-size:12px;opacity:.65;margin-top:2px;}
+
+/* GOALS TABLE */
+.goals-table{width:100%;border-collapse:collapse;font-size:13px;}
+.goals-table th{text-align:left;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);padding:7px 12px;border-bottom:2px solid var(--border);}
+.goals-table td{padding:11px 12px;border-bottom:1px solid var(--cream-dark);color:var(--text);vertical-align:top;}
+.goals-table tr:last-child td{border-bottom:none;}
+.goals-table td:first-child{font-weight:600;color:var(--navy);}
+
+/* WELCOME HERO */
+.welcome-hero{background:linear-gradient(135deg,var(--navy) 0%,#1e3f70 50%,#2a4f88 100%);border-radius:18px;padding:44px;color:#fff;margin-bottom:24px;position:relative;overflow:hidden;}
+.welcome-hero::before{content:'';position:absolute;right:-40px;top:-40px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.04);}
+.welcome-hero::after{content:'';position:absolute;right:80px;bottom:-60px;width:160px;height:160px;border-radius:50%;background:rgba(201,168,76,.08);}
+.welcome-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px;}
+.welcome-title{font-family:'Libre Baskerville',serif;font-size:34px;font-weight:700;line-height:1.15;margin-bottom:14px;}
+.welcome-sub{font-size:14px;opacity:.7;line-height:1.65;max-width:480px;}
+.welcome-meta{margin-top:24px;display:flex;gap:28px;}
+.welcome-stat-num{font-family:'Libre Baskerville',serif;font-size:26px;font-weight:700;color:var(--gold);}
+.welcome-stat-label{font-size:10px;opacity:.5;text-transform:uppercase;letter-spacing:.08em;margin-top:1px;}
+
+/* ACCORDION */
+.accordion{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.accordion-trigger{width:100%;background:#fff;border:none;padding:14px 18px;text-align:left;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:600;color:var(--navy);transition:background .15s;}
+.accordion-trigger:hover{background:var(--cream);}
+.accordion-trigger .acc-icon{width:22px;height:22px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:12px;transition:transform .25s;}
+.accordion-trigger.open .acc-icon{transform:rotate(180deg);}
+.accordion-body{display:none;padding:4px 18px 18px;background:#fff;border-top:1px solid var(--border);}
+.accordion-body.open{display:block;}
+
+/* ══ QUIZ ══ */
+.quiz-card{background:#fff;border:2px solid var(--border);border-radius:14px;padding:26px 28px;margin-bottom:18px;position:relative;overflow:hidden;}
+.quiz-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy),var(--gold));}
+.quiz-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.quiz-badge{background:var(--navy);color:#fff;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:12px;}
+.quiz-q{font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:14px;line-height:1.45;}
+.quiz-options{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;transition:all .2s;font-size:13.5px;color:var(--text);background:#fff;}
+.quiz-opt:hover{border-color:var(--navy);background:rgba(25,49,91,.03);}
+.quiz-opt.correct{border-color:var(--success);background:var(--success-bg);color:var(--success);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:rgba(192,57,43,.06);color:var(--red);}
+.quiz-opt.disabled{cursor:default;pointer-events:none;}
+.quiz-opt-letter{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;color:var(--text-muted);}
+.quiz-opt.correct .quiz-opt-letter{border-color:var(--success);background:var(--success);color:#fff;}
+.quiz-opt.wrong .quiz-opt-letter{border-color:var(--red);background:var(--red);color:#fff;}
+.quiz-feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.55;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.correct{background:var(--success-bg);color:var(--success);border:1px solid rgba(45,122,79,.2);}
+.quiz-feedback.wrong{background:rgba(192,57,43,.06);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.quiz-score-bar{display:flex;align-items:center;gap:10px;margin-top:10px;}
+.quiz-score-dots{display:flex;gap:5px;}
+.quiz-score-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s;}
+.quiz-score-dot.done-correct{background:var(--success);}
+.quiz-score-dot.done-wrong{background:var(--red);}
+
+/* ══ ACTIVITY ══ */
+.activity-card{background:linear-gradient(135deg,rgba(25,49,91,.04) 0%,rgba(201,168,76,.06) 100%);border:1.5px solid var(--border);border-radius:14px;padding:24px 26px;margin-bottom:18px;position:relative;}
+.activity-tag{display:inline-flex;align-items:center;gap:6px;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:10px;margin-bottom:12px;}
+.activity-tag.online{background:rgba(25,49,91,.1);color:var(--navy);}
+.activity-tag.offline{background:rgba(201,168,76,.15);color:#7a5e0a;}
+.activity-title{font-family:'Libre Baskerville',serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+.activity-desc{font-size:13.5px;color:var(--text-muted);line-height:1.65;margin-bottom:14px;}
+.activity-steps{list-style:none;counter-reset:steps;}
+.activity-step{counter-increment:steps;display:flex;align-items:flex-start;gap:10px;padding:7px 0;font-size:13px;color:var(--text);line-height:1.5;}
+.activity-step::before{content:counter(steps);width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.activity-complete-btn{margin-top:14px;}
+
+/* WEEK 2 */
+.w2-track{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.w2-track-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;transition:all .2s;}
+.w2-track-card:hover{border-color:var(--navy);box-shadow:var(--shadow);}
+.w2-track-icon{font-size:24px;margin-bottom:8px;}
+.w2-track-title{font-weight:700;font-size:14px;color:var(--navy);margin-bottom:4px;}
+.w2-track-desc{font-size:12px;color:var(--text-muted);line-height:1.55;}
+
+/* PRINT SUMMARY */
+.print-btn-row{display:flex;gap:10px;margin-bottom:24px;}
+.summary-section{background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
+.summary-section-title{font-family:'Libre Baskerville',serif;font-size:15px;color:var(--navy);font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.summary-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--cream-dark);font-size:13px;}
+.summary-row:last-child{border-bottom:none;}
+.summary-key{color:var(--text-muted);font-size:12px;min-width:180px;}
+.summary-val{color:var(--navy);font-weight:600;text-align:right;}
+.summary-check-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;color:var(--text);}
+.summary-check-icon{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.summary-check-icon.done{background:var(--success);color:#fff;}
+.summary-check-icon.undone{background:var(--cream-dark);color:var(--text-muted);}
+
+/* ONBOARDING SETUP MODAL */
+.setup-overlay{position:fixed;inset:0;background:rgba(15,30,56,.85);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.setup-modal{background:#fff;border-radius:20px;padding:44px;max-width:480px;width:100%;box-shadow:var(--shadow-lg);position:relative;}
+.setup-logo{font-family:'Libre Baskerville',serif;font-size:15px;font-weight:700;color:var(--navy);letter-spacing:.04em;margin-bottom:6px;}
+.setup-title{font-family:'Libre Baskerville',serif;font-size:26px;color:var(--navy);font-weight:700;margin-bottom:8px;}
+.setup-sub{font-size:13.5px;color:var(--text-muted);line-height:1.6;margin-bottom:28px;}
+.setup-field{margin-bottom:18px;}
+.setup-label{font-size:11px;font-weight:600;color:var(--navy);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;display:block;}
+.setup-input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border .2s;background:#fff;}
+.setup-input:focus{border-color:var(--navy);}
+.setup-select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border .2s;background:#fff;appearance:none;cursor:pointer;}
+.setup-select:focus{border-color:var(--navy);}
+.setup-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:background .2s;margin-top:6px;}
+.setup-btn:hover{background:var(--navy-light);}
+
+/* IFRAME */
+.iframe-wrapper{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--cream);}
+.iframe-wrapper iframe{display:block;width:100%;height:500px;border:none;}
+
+/* TAG */
+.tag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:rgba(25,49,91,.08);color:var(--navy);margin-left:6px;}
+.tag.optional{background:rgba(201,168,76,.15);color:#8a6a10;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--success);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:7px;opacity:0;transform:translateY(10px);transition:all .3s ease;z-index:500;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(25,49,91,.15);border-radius:3px;}
+
+/* ══ PRINT ══ */
+@media print{
+  .sidebar,.topbar,.setup-overlay,.toast,.no-print{display:none!important;}
+  .main{margin-left:0!important;}
+  #panel-summary{display:block!important;padding:24px!important;}
+  .panel:not(#panel-summary){display:none!important;}
+  .card,.summary-section{box-shadow:none!important;break-inside:avoid;}
+  body{background:#fff!important;}
+  .print-header{display:block!important;}
+  a{color:inherit!important;}
+}
+.print-header{display:none;text-align:center;margin-bottom:22px;padding-bottom:14px;border-bottom:2px solid var(--navy);}
+.print-header .ph-brand{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--navy);font-weight:700;}
+.print-header .ph-sub{font-size:11px;color:var(--text-muted);margin-top:3px;}
+.print-header .ph-date{font-size:10px;color:var(--text-muted);margin-top:2px;}
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="setup-overlay" id="setupOverlay">
+  <div class="setup-modal">
+    <div class="setup-logo">HANSTON PROPERTIES</div>
+    <div class="setup-title">Welcome aboard. 👋</div>
+    <div class="setup-sub">Before we get started, let's get a few details in. This helps personalize your onboarding portal.</div>
+    <div class="setup-field">
+      <label class="setup-label">Full Name</label>
+      <input class="setup-input" id="setupName" placeholder="e.g. Maria Santos" />
+    </div>
+    <div class="setup-field">
+      <label class="setup-label">Official Job Title</label>
+      <input class="setup-input" id="setupTitle" placeholder="e.g. Accounting Associate" />
+    </div>
+    <div class="setup-field">
+      <label class="setup-label">Division / Property</label>
+      <select class="setup-select" id="setupDiv">
+        <option value="">Select your division…</option>
+        <option value="Hanston Building (Hanston Building (HB)">Hanston Building (Hanston Building (HB)</option>
+        <option value="Hanston Square (HS)">Hanston Square (HS)</option>
+        <option value="Northbank (NB)">Northbank (NB)</option>
+        <option value="People & Culture">People & Culture</option>
+        <option value="Finance">Finance</option>
+        <option value="Operations">Operations</option>
+        <option value="Leasing & Sales">Leasing & Sales</option>
+        <option value="Property Management">Property Management</option>
+      </select>
+    </div>
+    <button class="setup-btn" onclick="startOnboarding()">Start My Onboarding →</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">HANSTON</div>
+    <div class="sub">People & Culture · Onboarding</div>
+  </div>
+  <div class="employee-card">
+    <div class="employee-avatar" id="sidebarInitial">?</div>
+    <div class="employee-name" id="sidebarName">New Employee</div>
+    <div class="employee-role" id="sidebarRole">—</div>
+    <div class="employee-div" id="sidebarDiv">—</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span>Progress</span><span id="progressPct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Overview</div>
+    <button class="nav-item active" onclick="showPanel('welcome',this)"><span class="nav-dot active">⊕</span>Welcome</button>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Week 1</div>
+    <button class="nav-item" onclick="showPanel('day1',this)"><span class="nav-dot active">1</span>Day 1 — Get Oriented<span class="nav-badge">Start</span></button>
+    <button class="nav-item" onclick="showPanel('netsuite',this)"><span class="nav-dot active">1.5</span>Day 1–2 — NetSuite</button>
+    <button class="nav-item" onclick="showPanel('day2',this)"><span class="nav-dot locked">2</span>Day 2 — Meet Manager</button>
+    <button class="nav-item" onclick="showPanel('day3',this)"><span class="nav-dot locked">3</span>Day 3 — Buddy Lunch</button>
+    <button class="nav-item" onclick="showPanel('day4',this)"><span class="nav-dot locked">4</span>Day 4 — Dept Head</button>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Week 2</div>
+    <button class="nav-item" onclick="showPanel('week2',this)"><span class="nav-dot locked">W2</span>Week 2 Deep Dives</button>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Reference</div>
+    <button class="nav-item" onclick="showPanel('pillars',this)"><span class="nav-dot locked">◈</span>Six Pillars</button>
+    <button class="nav-item" onclick="showPanel('culture',this)"><span class="nav-dot locked">📖</span>Culture Playbook</button>
+    <button class="nav-item" onclick="showPanel('summary',this)"><span class="nav-dot locked">🖨</span>My Summary</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-breadcrumb">Hanston Properties · <strong>Employee Onboarding</strong></div>
+    </div>
+    <div class="topbar-right">
+      <div class="day-badge" id="currentDayBadge">Week 1</div>
+    </div>
+  </div>
+
+  <!-- ══ WELCOME ══ -->
+  <div class="panel active" id="panel-welcome">
+    <div class="welcome-hero">
+      <div class="welcome-tag">Welcome to Hanston Properties</div>
+      <div class="welcome-title">Your first weeks,<br>built to last.</div>
+      <div class="welcome-sub">Here at Hanston, careers are built to last. This is your onboarding home — every day has a plan, every task has a purpose.</div>
+      <div class="welcome-meta">
+        <div class="welcome-stat"><div class="welcome-stat-num">2</div><div class="welcome-stat-label">Weeks</div></div>
+        <div class="welcome-stat"><div class="welcome-stat-num">6</div><div class="welcome-stat-label">Pillars</div></div>
+        <div class="welcome-stat"><div class="welcome-stat-num">4+</div><div class="welcome-stat-label">Key Days</div></div>
+      </div>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card"><div class="pillar-emoji">🤝</div><div class="pillar-name">Relationships</div><div class="pillar-sub">People & connections</div></div>
+      <div class="pillar-card"><div class="pillar-emoji">🏢</div><div class="pillar-name">Context</div><div class="pillar-sub">Company knowledge</div></div>
+      <div class="pillar-card"><div class="pillar-emoji">⚙️</div><div class="pillar-name">Tooling</div><div class="pillar-sub">Systems we use</div></div>
+      <div class="pillar-card"><div class="pillar-emoji">📋</div><div class="pillar-name">Process</div><div class="pillar-sub">How we work</div></div>
+      <div class="pillar-card"><div class="pillar-emoji">🤖</div><div class="pillar-name">AI-First</div><div class="pillar-sub">Tools for you</div></div>
+      <div class="pillar-card"><div class="pillar-emoji">🎯</div><div class="pillar-name">Practicum</div><div class="pillar-sub">Hands-on work</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon gold">📅</div><div><div class="card-title">Your Onboarding at a Glance</div><div class="card-subtitle">Key milestones for your first two weeks</div></div></div>
+      <div class="timeline-item"><div class="timeline-dot">1</div><div class="timeline-content"><div class="timeline-time">Day 1 · 8:00 AM</div><div class="timeline-title">Get Oriented — HR Onboarding</div><div class="timeline-desc">Company culture, policies, systems, tools, Viber setup + your first quiz.</div></div></div>
+      <div class="timeline-item"><div class="timeline-dot">2</div><div class="timeline-content"><div class="timeline-time">Day 2</div><div class="timeline-title">Meet Your Manager</div><div class="timeline-desc">Team intro, your role, goals, expectations, and calendar planning.</div></div></div>
+      <div class="timeline-item"><div class="timeline-dot">🍽️</div><div class="timeline-content"><div class="timeline-time">Day 3</div><div class="timeline-title">Buddy Lunch</div><div class="timeline-desc">Your office buddy will help you settle in. Reach out and connect.</div></div></div>
+      <div class="timeline-item"><div class="timeline-dot">4</div><div class="timeline-content"><div class="timeline-time">Day 4</div><div class="timeline-title">Department Head Discussion</div><div class="timeline-desc">Big picture context — where your department is going.</div></div></div>
+      <div class="timeline-item"><div class="timeline-dot">W2</div><div class="timeline-content"><div class="timeline-time">Week 2</div><div class="timeline-title">Deep Dives, Cross-Team Meets & Practicum</div><div class="timeline-desc">Tools deep dives, cross-functional context, and your first real deliverable.</div></div></div>
+    </div>
+    <div class="action-row"><button class="link-btn primary" onclick="showPanel('day1',null)">Start Day 1 →</button></div>
+  </div>
+
+  <!-- ══ DAY 1 ══ -->
+  <div class="panel" id="panel-day1">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Day 1 · 8:00 AM Onwards</div>
+      <div class="panel-title">Get <em>Oriented</em></div>
+      <div class="panel-desc">Your first day starts with HR. By end of today, you'll know the company, have your tools set up, and be in all the right Viber groups.</div>
+    </div>
+
+    <!-- COMPANY KNOWLEDGE -->
+    <div class="card">
+      <div class="card-header"><div class="card-icon navy">🏢</div><div><div class="card-title">Know the Company</div><div class="card-subtitle">Context · 45 mins with HR</div></div></div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="c1" onchange="updateProgress()"><label for="c1">Read the <strong>Culture Handbook</strong> — who we are and how we work</label></li>
+        <li class="check-item"><input type="checkbox" id="c2" onchange="updateProgress()"><label for="c2">Walk through the <strong>Org Chart</strong> — teams and what each team does</label></li>
+        <li class="check-item"><input type="checkbox" id="c3" onchange="updateProgress()"><label for="c3">Review <strong>General Office Rules, Policies & Procedures</strong></label></li>
+        <li class="check-item"><input type="checkbox" id="c4" onchange="updateProgress()"><label for="c4">Review <strong>Finance Policies</strong> — expense, reimbursement, approvals</label></li>
+      </ul>
+      <div class="action-row">
+        <a href="https://acglinoga.my.canva.site/hanston-culture-playbook" target="_blank" class="link-btn primary">📖 Culture Handbook</a>
+        <button class="link-btn outline" onclick="showOrgChartModal()">📊 View Org Chart</button>
+        <a href="#" class="link-btn outline">🧾 NetSuite Walkthroughs</a>
+      </div>
+    </div>
+
+    <!-- QUIZ 1 -->
+    <div class="quiz-card" id="quiz-block-1">
+      <div class="quiz-header">
+        <span class="quiz-badge">🧠 Quick Check — Company Knowledge</span>
+        <div class="quiz-score-bar"><span style="font-size:11px;color:var(--text-muted);">Score:</span><div class="quiz-score-dots" id="qdots1"></div></div>
+      </div>
+      <div id="quiz1-container"></div>
+    </div>
+
+    <!-- TOOLING -->
+    <div class="card">
+      <div class="card-header"><div class="card-icon gold">⚙️</div><div><div class="card-title">Set Up Your Tools</div><div class="card-subtitle">Tooling · 60 mins</div></div></div>
+      <div class="tool-grid" style="margin-bottom:14px;">
+        <div class="tool-card"><div class="tool-icon">📧</div><div><div class="tool-name">Google Workspace</div><div class="tool-desc">Gmail, Drive, Docs, Calendar</div></div></div>
+        <div class="tool-card"><div class="tool-icon">📊</div><div><div class="tool-name">NetSuite</div><div class="tool-desc">Finance & operations ERP</div></div></div>
+        <div class="tool-card"><div class="tool-icon">💬</div><div><div class="tool-name">Viber</div><div class="tool-desc">Team comms & group chats</div></div></div>
+        <div class="tool-card"><div class="tool-icon">🤖</div><div><div class="tool-name">Claude + Gemini</div><div class="tool-desc">Your AI-first tools</div></div></div>
+      </div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="c5" onchange="updateProgress()"><label for="c5">Log into <strong>Gmail</strong> and confirm access</label></li>
+        <li class="check-item"><input type="checkbox" id="c6" onchange="updateProgress()"><label for="c6">Set up your <strong>email signature</strong></label></li>
+        <li class="check-item"><input type="checkbox" id="c7" onchange="updateProgress()"><label for="c7">Upload your <strong>profile photo</strong> to your Google account</label></li>
+        <li class="check-item"><input type="checkbox" id="c8" onchange="updateProgress()"><label for="c8">Complete the <strong>NetSuite walkthrough</strong> with HR</label></li>
+      </ul>
+      <div class="divider"></div>
+      <p style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px;">📧 Email Signature Builder</p>
+      <div class="template-box">
+        <div class="template-label">Copy this into Gmail Settings → Signature</div>
+        <div class="template-text" style="line-height:2;">
+          <strong><input class="template-input" id="sigName" placeholder="Your Full Name" style="min-width:140px;font-size:14px;"></strong><br>
+          <input class="template-input" id="sigRole" placeholder="Your Job Title" style="min-width:150px;"><br>
+          Hanston Properties &nbsp;|&nbsp; <input class="template-input" id="sigDiv" placeholder="Your Division" style="min-width:120px;"><br>
+          <span style="color:var(--text-muted);">📧 yourname@hanstonproperties.com</span>
+        </div>
+        <button class="copy-btn" onclick="copySig()">📋 Copy Signature</button>
+      </div>
+    </div>
+
+    <!-- ACTIVITY: Gmail Setup -->
+    <div class="activity-card">
+      <div class="activity-tag online">💻 Online Activity</div>
+      <div class="activity-title">Set Up Your Gmail Profile</div>
+      <div class="activity-desc">Complete these steps in your browser — HR will verify before end of Day 1.</div>
+      <ol class="activity-steps">
+        <li class="activity-step">Open Gmail → click your avatar (top right) → "Manage your Google Account"</li>
+        <li class="activity-step">Go to "Personal Info" → upload a professional photo</li>
+        <li class="activity-step">Back in Gmail → Settings (⚙️) → "See all settings" → "Signature" → create your signature using the template above</li>
+        <li class="activity-step">Send a test email to <strong>onboarding@hanstonproperties.com</strong> with subject "Day 1 — [Your Name] is set up!" so HR can verify</li>
+      </ol>
+      <div class="activity-complete-btn">
+        <input type="checkbox" id="act1" onchange="updateProgress()" style="accent-color:var(--navy);">
+        <label for="act1" style="font-size:13px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer;">✓ Mark activity complete</label>
+      </div>
+    </div>
+
+    <!-- VIBER -->
+    <div class="card">
+      <div class="card-header"><div class="card-icon purple">💬</div><div><div class="card-title">Join Your Viber Groups</div><div class="card-subtitle">Relationships · 15 mins</div></div></div>
+      <div class="viber-group"><div class="viber-group-left"><div class="viber-group-icon">👥</div><div><div class="viber-group-name">Team / Department Group</div><div class="viber-group-sub">Your direct team's group chat</div></div></div><button class="link-btn viber" onclick="markViberDone(this)">Join ↗</button></div>
+      <div class="viber-group"><div class="viber-group-left"><div class="viber-group-icon">🎉</div><div><div class="viber-group-name">HCIC Employee Events & Activities</div><div class="viber-group-sub">Company-wide events and programs</div></div></div><button class="link-btn viber" onclick="markViberDone(this)">Join ↗</button></div>
+      <div class="viber-group"><div class="viber-group-left"><div class="viber-group-icon">📢</div><div><div class="viber-group-name">HCIC News & Updates</div><div class="viber-group-sub">Announcements, memos, updates</div></div></div><button class="link-btn viber" onclick="markViberDone(this)">Join ↗</button></div>
+      <div style="margin-top:16px;">
+        <p style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px;">👋 Viber Introduction Template</p>
+        <div class="note-box"><strong>Note:</strong> Send this once you've joined your team Viber group.</div>
+        <div class="template-box">
+          <div class="template-label">Copy and personalize</div>
+          <div class="template-text">Hi! I'm <input class="template-input" id="introName" placeholder="your name">, the new <input class="template-input" id="introRole" placeholder="your role">. <input class="template-input" id="introMsg" placeholder="something about yourself!" style="min-width:180px;"></div>
+          <button class="copy-btn" onclick="copyViberIntro()">📋 Copy Message</button>
+        </div>
+      </div>
+      <ul class="checklist" style="margin-top:10px;">
+        <li class="check-item"><input type="checkbox" id="c9" onchange="updateProgress()"><label for="c9">Joined all three Viber groups</label></li>
+        <li class="check-item"><input type="checkbox" id="c10" onchange="updateProgress()"><label for="c10">Sent introduction message in team group</label></li>
+      </ul>
+    </div>
+
+    <!-- EOD -->
+    <div class="card" style="border:2px solid var(--navy);">
+      <div class="card-header"><div class="card-icon navy">✅</div><div><div class="card-title">End of Day 1 Checklist</div><div class="card-subtitle">All green before you log off</div></div></div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="eod1" onchange="updateProgress()"><label for="eod1">Culture Handbook reviewed</label></li>
+        <li class="check-item"><input type="checkbox" id="eod2" onchange="updateProgress()"><label for="eod2">Gmail set up with signature and photo</label></li>
+        <li class="check-item"><input type="checkbox" id="eod3" onchange="updateProgress()"><label for="eod3">Test email sent to onboarding@hanstonproperties.com</label></li>
+        <li class="check-item"><input type="checkbox" id="eod4" onchange="updateProgress()"><label for="eod4">All Viber groups joined + intro sent</label></li>
+        <li class="check-item"><input type="checkbox" id="eod5" onchange="updateProgress()"><label for="eod5">NetSuite walkthrough completed</label></li>
+        <li class="check-item"><input type="checkbox" id="eod6" onchange="updateProgress()"><label for="eod6">Company quiz passed ✓</label></li>
+      </ul>
+      <div class="action-row" style="margin-top:16px;"><button class="link-btn primary" onclick="pingSheet('Day 1'); showPanel('netsuite',null)">Next: NetSuite Walkthroughs →</button></div>
+    </div>
+  </div>
+
+  <!-- NS DAY PANEL -->
+  <div class="panel" id="panel-netsuite">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Day 1–2 · After HR Orientation</div>
+      <div class="panel-title">NetSuite <em>Walkthroughs</em></div>
+      <div class="panel-desc">NetSuite is Hanston’s system for HR transactions. Select your role to see the walkthroughs that apply to you.</div>
+    </div>
+    <div class="note-box">
+      <strong>Access first:</strong> Confirm your NetSuite account is activated by HR before starting. Email <a href="mailto:humanresources@hanstonproperties.com" style="color:var(--navy)">humanresources@hanstonproperties.com</a> if you need access.
+    </div>
+
+    <div style="display:flex;gap:14px;margin:18px 0 22px;">
+      <div id="rfBtn" onclick="pickRole('rf')" style="flex:1;padding:18px 14px;border-radius:12px;border:2px solid var(--border);background:#fff;cursor:pointer;text-align:center;font-family:'DM Sans',sans-serif;transition:all .2s;">
+        <div style="font-size:28px;margin-bottom:7px;">&#128100;</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);">Rank &amp; File</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">Staff · Associate · Coordinator · Technician</div>
+      </div>
+      <div id="mgrBtn" onclick="pickRole('mgr')" style="flex:1;padding:18px 14px;border-radius:12px;border:2px solid var(--border);background:#fff;cursor:pointer;text-align:center;font-family:'DM Sans',sans-serif;transition:all .2s;">
+        <div style="font-size:28px;margin-bottom:7px;">&#128084;</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);">Manager / Lead</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">Supervisor · Manager · Dept Head · Team Lead</div>
+      </div>
+    </div>
+
+    <div id="ns-rf" style="display:none;">
+      <div class="info-box" style="margin-bottom:14px;">Showing walkthroughs for <strong>Rank &amp; File employees</strong>.</div>
+      <div class="accordion"><button class="accordion-trigger" onclick="toggleNSacc(this)">&#127804; How to File a Leave <span style="font-size:9px;background:rgba(45,122,79,.1);color:var(--success);padding:2px 8px;border-radius:8px;margin:0 8px;">All Employees</span><span class="acc-icon">▾</span></button><div class="accordion-body"><p style="font-size:12.5px;color:var(--text-muted);padding-top:10px;line-height:1.65;">File at least <strong>2 working days in advance</strong> for planned leaves.</p><ol style="font-size:12.5px;color:var(--text);line-height:2;margin:10px 0 0 16px;"><li>NetSuite &rarr; <strong>Employee Center</strong></li><li>Click <strong>Time Off</strong> &rarr; <strong>Request Time Off</strong></li><li>Select leave type (Vacation / Sick / Emergency), dates, and add reason note</li><li>Submit — direct lead is notified automatically for approval</li><li>Attach medical certificate if SL exceeds 2 consecutive days (submit upon return)</li></ol><div class="note-box" style="margin-top:10px;"><strong>Tip:</strong> You can check your leave balance from the same Employee Center page.</div><div style="margin-top:10px;"><input type="checkbox" id="ns1" onchange="updateProgress()" style="accent-color:var(--navy)"><label for="ns1" style="font-size:12.5px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer">✓ I understand how to file a leave</label></div></div></div>
+      <div class="accordion"><button class="accordion-trigger" onclick="toggleNSacc(this)">&#9201; How to File for Overtime <span style="font-size:9px;background:rgba(25,49,91,.09);color:var(--navy);padding:2px 8px;border-radius:8px;margin:0 8px;">Rank &amp; File</span><span class="acc-icon">▾</span></button><div class="accordion-body"><p style="font-size:12.5px;color:var(--text-muted);padding-top:10px;line-height:1.65;">OT must be <strong>pre-approved by your direct lead before rendering</strong>. Never render OT without prior approval.</p><ol style="font-size:12.5px;color:var(--text);line-height:2;margin:10px 0 0 16px;"><li>Get Viber or verbal approval from your direct lead <strong>before</strong> rendering OT</li><li>After rendering: NetSuite &rarr; Employee Center &rarr; <strong>Time</strong> &rarr; <strong>Log Time</strong></li><li>Select date, enter hours, Type: <strong>Overtime</strong>, describe work done</li><li>Submit for lead approval</li></ol><div class="note-box" style="margin-top:10px;"><strong>Important:</strong> OT filed without prior approval may not be compensated.</div><div style="margin-top:10px;"><input type="checkbox" id="ns2" onchange="updateProgress()" style="accent-color:var(--navy)"><label for="ns2" style="font-size:12.5px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer">✓ I understand how to file for overtime</label></div></div></div>
+      <div class="accordion"><button class="accordion-trigger" onclick="toggleNSacc(this)">&#129534; How to File for Reimbursement <span style="font-size:9px;background:rgba(25,49,91,.09);color:var(--navy);padding:2px 8px;border-radius:8px;margin:0 8px;">Rank &amp; File</span><span class="acc-icon">▾</span></button><div class="accordion-body"><p style="font-size:12.5px;color:var(--text-muted);padding-top:10px;line-height:1.65;">For work-related out-of-pocket expenses. Keep your official receipts. File within <strong>5 working days</strong>.</p><ol style="font-size:12.5px;color:var(--text);line-height:2;margin:10px 0 0 16px;"><li>NetSuite &rarr; Employee Center &rarr; <strong>Expenses</strong> &rarr; <strong>Enter Expense Report</strong></li><li>Enter: date, category, amount, business purpose</li><li>Attach scan/photo of your official receipt</li><li>Submit &rarr; routes to direct lead then Finance. Processed on next payroll cycle.</li></ol><div class="note-box" style="margin-top:10px;"><strong>Reminder:</strong> Missing ORs = claim returned. No exceptions.</div><div style="margin-top:10px;"><input type="checkbox" id="ns3" onchange="updateProgress()" style="accent-color:var(--navy)"><label for="ns3" style="font-size:12.5px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer">✓ I understand how to file for reimbursement</label></div></div></div>
+      <div class="accordion"><button class="accordion-trigger" onclick="toggleNSacc(this)">&#128179; How to Request for Payment <span style="font-size:9px;background:rgba(25,49,91,.09);color:var(--navy);padding:2px 8px;border-radius:8px;margin:0 8px;">Rank &amp; File</span><span class="acc-icon">▾</span></button><div class="accordion-body"><p style="font-size:12.5px;color:var(--text-muted);padding-top:10px;line-height:1.65;">For requesting company payment to a supplier or service provider.</p><ol style="font-size:12.5px;color:var(--text);line-height:2;margin:10px 0 0 16px;"><li>NetSuite &rarr; <strong>Transactions</strong> &rarr; <strong>Payment Request</strong></li><li>Enter: payee name, amount, purpose, cost center/department</li><li>Attach supporting docs: SOA, invoice, delivery receipt, or PO</li><li>Submit &rarr; manager approval &rarr; Finance processing</li></ol><div class="note-box" style="margin-top:10px;"><strong>Note:</strong> At least one supporting document is required. Requests without attachments will be returned.</div><div style="margin-top:10px;"><input type="checkbox" id="ns4" onchange="updateProgress()" style="accent-color:var(--navy)"><label for="ns4" style="font-size:12.5px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer">✓ I understand how to request for payment</label></div></div></div>
+    </div>
+
+    <div id="ns-mgr" style="display:none;">
+      <div class="info-box" style="margin-bottom:14px;">Showing walkthroughs for <strong>Managers &amp; Team Leads</strong> — all RF processes plus manager-specific functions.</div>
+      <div class="accordion"><button class="accordion-trigger" onclick="toggleNSacc(this)">&#127968; How to File for WFH <span style="font-size:9px;background:rgba(201,168,76,.18);color:#7a5000;padding:2px 8px;border-radius:8px;margin:0 8px;">Managers &amp; Leads</span><span class="acc-icon">▾</span></button><div class="accordion-body"><p style="font-size:12.5px;color:var(--text-muted);padding-top:10px;line-height:1.65;">WFH is not an entitlement. Requires business justification and <strong>pre-approval</strong>.</p><ol style="font-size:12.5px;color:var(--text);line-height:2;margin:10px 0 0 16px;"><li>Get approval from your department head or the President first</li><li>NetSuite &rarr; Employee Center &rarr; Time Off &rarr; <strong>Work From Home Request</strong></li><li>Select dates, add justification (what you will work on remotely)</li><li>Submit &rarr; routed to department head for approval</li></ol><div style="margin-top:10px;"><input type="checkbox" id="nsm1" onchange="updateProgress()" style="accent-color:var(--navy)"><label for="nsm1" style="font-size:12.5px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer">✓ I understand how to file for WFH</label></div></div></div>
+      <div class="accordion"><button class="accordion-trigger" onclick="toggleNSacc(this)">&#9989; How to Approve Requests <span style="font-size:9px;background:rgba(201,168,76,.18);color:#7a5000;padding:2px 8px;border-radius:8px;margin:0 8px;">Managers &amp; Leads</span><span class="acc-icon">▾</span></button><div class="accordion-body"><p style="font-size:12.5px;color:var(--text-muted);padding-top:10px;line-height:1.65;">Act on approval requests within <strong>1 working day</strong>. Delayed approvals hold up your team.</p><ol style="font-size:12.5px;color:var(--text);line-height:2;margin:10px 0 0 16px;"><li>Log in &rarr; check <strong>Reminders</strong> on your dashboard for pending approvals</li><li>Go to <strong>Home &rarr; Reminders &rarr; Approvals</strong></li><li>Review, then click <strong>Approve</strong> or <strong>Reject</strong> (always add a note when rejecting)</li><li>Employee is automatically notified of your decision</li></ol><div class="note-box" style="margin-top:10px;"><strong>Best practice:</strong> Check your approvals queue every morning.</div><div style="margin-top:10px;"><input type="checkbox" id="nsm2" onchange="updateProgress()" style="accent-color:var(--navy)"><label for="nsm2" style="font-size:12.5px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer">✓ I understand how to approve requests</label></div></div></div>
+      <div class="accordion"><button class="accordion-trigger" onclick="toggleNSacc(this)">&#128203; How to Fill Out the MRF <span style="font-size:9px;background:rgba(201,168,76,.18);color:#7a5000;padding:2px 8px;border-radius:8px;margin:0 8px;">Managers &amp; Leads</span><span class="acc-icon">▾</span></button><div class="accordion-body"><p style="font-size:12.5px;color:var(--text-muted);padding-top:10px;line-height:1.65;">Only Dept Heads and Managers can file MRFs. <strong>Triple-check before submitting — cannot be edited after.</strong></p><ol style="font-size:12.5px;color:var(--text);line-height:2;margin:10px 0 0 16px;"><li>Access: <a href="https://bit.ly/MRFNetsuite" target="_blank" style="color:var(--navy);font-weight:600;">bit.ly/MRFNetsuite</a> (HR will also share the direct link)</li><li>Fill in: request date, target deployment date, job title, immediate superior, department, employee type</li><li>Add: no. of requirements, reason (Additional / Replacement), tenureship, justification, job details</li><li>Triple-check, then submit — triggers: HR review (1–2 days) &rarr; President final approval</li></ol><div class="note-box" style="margin-top:10px;"><strong>Note:</strong> Manual MRFs will be returned. This online process is mandatory.</div><div class="action-row" style="margin-top:12px;"><a href="https://bit.ly/MRFNetsuite" target="_blank" class="link-btn primary">&#128203; Open MRF in NetSuite &rarr;</a></div><div style="margin-top:10px;"><input type="checkbox" id="nsm3" onchange="updateProgress()" style="accent-color:var(--navy)"><label for="nsm3" style="font-size:12.5px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer">✓ I understand how to fill out the MRF</label></div></div></div>
+      <div class="accordion"><button class="accordion-trigger" onclick="toggleNSacc(this)">&#128197; How to Use the NetSuite Calendar <span style="font-size:9px;background:rgba(201,168,76,.18);color:#7a5000;padding:2px 8px;border-radius:8px;margin:0 8px;">Managers &amp; Leads</span><span class="acc-icon">▾</span></button><div class="accordion-body"><ol style="font-size:12.5px;color:var(--text);line-height:2;margin:10px 0 0 16px;"><li>NetSuite &rarr; <strong>Activities</strong> &rarr; <strong>Calendar</strong></li><li>Use <strong>Team View</strong> to see your direct reports’ schedules and approved leaves</li><li>Create calendar events, set reminders, and block time for recurring meetings (e.g. L10s)</li></ol><div style="margin-top:10px;"><input type="checkbox" id="nsm4" onchange="updateProgress()" style="accent-color:var(--navy)"><label for="nsm4" style="font-size:12.5px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer">✓ I know how to use the NetSuite calendar</label></div></div></div>
+    </div>
+
+    <div class="quiz-card" style="margin-top:18px;">
+      <div class="quiz-header"><span class="quiz-badge">&#129504; Quick Check — NetSuite</span></div>
+      <div id="quizNS-container"></div>
+    </div>
+
+    <div class="card" style="border:2px solid var(--navy);margin-top:4px;">
+      <div class="card-header"><div class="card-icon navy">✅</div><div><div class="card-title">NetSuite Day Checklist</div><div class="card-subtitle">Before moving to Day 2</div></div></div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="nseod1" onchange="updateProgress()"><label for="nseod1">NetSuite account access confirmed with HR</label></li>
+        <li class="check-item"><input type="checkbox" id="nseod2" onchange="updateProgress()"><label for="nseod2">All applicable walkthroughs reviewed and ticked off</label></li>
+        <li class="check-item"><input type="checkbox" id="nseod3" onchange="updateProgress()"><label for="nseod3">NetSuite quiz completed</label></li>
+      </ul>
+      <div class="action-row" style="margin-top:14px;"><button class="link-btn primary" onclick="pingSheet('NetSuite'); showPanel('day2',null)">Day 2 →</button></div>
+    </div>
+  </div>
+
+  <!-- ══ DAY 2 ══ -->
+  <div class="panel" id="panel-day2">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Day 2</div>
+      <div class="panel-title">Meet Your <em>Manager</em></div>
+      <div class="panel-desc">Today is about understanding where you fit — your team, your role, and what success looks like.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon navy">🤝</div><div><div class="card-title">Manager Discussion Agenda</div><div class="card-subtitle">Relationships + Context</div></div></div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="d2c1" onchange="updateProgress()"><label for="d2c1"><strong>Meet the team</strong> — who everyone is and their roles</label></li>
+        <li class="check-item"><input type="checkbox" id="d2c2" onchange="updateProgress()"><label for="d2c2"><strong>Team's daily tasks</strong> — what the team does day-to-day</label></li>
+        <li class="check-item"><input type="checkbox" id="d2c3" onchange="updateProgress()"><label for="d2c3"><strong>Your role in everything</strong> — how you connect to team output</label></li>
+        <li class="check-item"><input type="checkbox" id="d2c4" onchange="updateProgress()"><label for="d2c4"><strong>Goals & expectations</strong> — your first 30/60/90 days</label></li>
+      </ul>
+    </div>
+
+    <!-- ACTIVITY: Calendar -->
+    <div class="activity-card">
+      <div class="activity-tag online">💻 Online Activity</div>
+      <div class="activity-title">Send Your Onboarding Calendar Invites</div>
+      <div class="activity-desc">Your manager will give you a list of people to meet this week. By end of today, you should have sent calendar invites to all of them.</div>
+      <ol class="activity-steps">
+        <li class="activity-step">Open <strong>Google Calendar</strong> → click "+ Create"</li>
+        <li class="activity-step">Set a 30-minute slot for each person you need to meet (team leads, department heads, key stakeholders)</li>
+        <li class="activity-step">In the description, write: <em>"Hi [Name], I'm [your name], the new [your role]. My manager suggested I reach out to connect with you during my onboarding. Looking forward to learning from you!"</em></li>
+        <li class="activity-step">Send and confirm — aim to have all meetings within Week 1 and 2</li>
+      </ol>
+      <div class="activity-complete-btn">
+        <input type="checkbox" id="act2" onchange="updateProgress()" style="accent-color:var(--navy);">
+        <label for="act2" style="font-size:13px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer;">✓ All invites sent</label>
+      </div>
+      <div class="action-row" style="margin-top:12px;"><a href="https://calendar.google.com" target="_blank" class="link-btn primary">📅 Open Google Calendar</a></div>
+    </div>
+
+    <!-- QUIZ 2 -->
+    <div class="quiz-card" id="quiz-block-2">
+      <div class="quiz-header"><span class="quiz-badge">🧠 Quick Check — Your Team & Role</span></div>
+      <div id="quiz2-container"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-icon gold">📬</div><div><div class="card-title">Look for Your Buddy Email</div><div class="card-subtitle">Your buddy should have emailed you today</div></div></div>
+      <div class="note-box"><strong>Heads up:</strong> Your office buddy was assigned before your first day and should send you an email today. Check your inbox. If you haven't received anything by 3PM, let HR know.</div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="d2c5" onchange="updateProgress()"><label for="d2c5">Received buddy email <span class="tag optional">Check inbox</span></label></li>
+        <li class="check-item"><input type="checkbox" id="d2c6" onchange="updateProgress()"><label for="d2c6">Replied to buddy email to confirm Day 3 lunch</label></li>
+      </ul>
+    </div>
+
+    <div style="display:flex;gap:10px;"><button class="link-btn outline" onclick="showPanel('day1',null)">← Day 1</button><button class="link-btn primary" onclick="pingSheet('Day 2'); showPanel('day3',null)">Day 3 →</button></div>
+  </div>
+
+  <!-- ══ DAY 3 ══ -->
+  <div class="panel" id="panel-day3">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Day 3</div>
+      <div class="panel-title">Buddy <em>Lunch</em></div>
+      <div class="panel-desc">Your office buddy is your informal guide at Hanston. No agenda — just a real conversation over lunch.</div>
+    </div>
+    <div class="buddy-card">
+      <div class="buddy-avatar">?</div>
+      <div class="buddy-info"><div class="buddy-title">Your Office Buddy</div><div class="buddy-name">Assigned by HR</div><div class="buddy-role">Check your email for details</div></div>
+      <a href="viber://chat?number=XXXXXXXXXX" class="link-btn viber">💬 Message on Viber</a>
+    </div>
+    <div class="note-box"><strong>Reminder:</strong> Your buddy should have emailed you on Day 2. Their Viber number is in that email.</div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon purple">💬</div><div><div class="card-title">Reach Out to Your Buddy</div><div class="card-subtitle">Use this Viber message template</div></div></div>
+      <div class="template-box">
+        <div class="template-label">Viber message template</div>
+        <div class="template-text">Hi there! I'm <input class="template-input" id="buddyName" placeholder="your name">, the new <input class="template-input" id="buddyRole" placeholder="your role">. I was told to reach out because you're my new buddy. Looking forward to meeting you! 😊</div>
+        <button class="copy-btn" onclick="copyBuddyMsg()">📋 Copy Message</button>
+      </div>
+      <ul class="checklist" style="margin-top:10px;">
+        <li class="check-item"><input type="checkbox" id="d3c1" onchange="updateProgress()"><label for="d3c1">Reached out to buddy on Viber</label></li>
+        <li class="check-item"><input type="checkbox" id="d3c2" onchange="updateProgress()"><label for="d3c2">Lunch scheduled or confirmed</label></li>
+        <li class="check-item"><input type="checkbox" id="d3c3" onchange="updateProgress()"><label for="d3c3">Had lunch with buddy ✓</label></li>
+      </ul>
+    </div>
+
+    <!-- OFFLINE ACTIVITY -->
+    <div class="activity-card">
+      <div class="activity-tag offline">☀️ Offline Activity</div>
+      <div class="activity-title">Buddy Lunch Conversation Starters</div>
+      <div class="activity-desc">This isn't a formal meeting — but here are a few things worth asking your buddy. Bring these to the conversation.</div>
+      <ol class="activity-steps">
+        <li class="activity-step">Ask: <em>"What do you wish you knew in your first week?"</em></li>
+        <li class="activity-step">Ask: <em>"Who are the people I should make sure to connect with early on?"</em></li>
+        <li class="activity-step">Ask: <em>"What's something about Hanston culture that's hard to learn from a handbook?"</em></li>
+        <li class="activity-step">Share one thing you're excited about in your new role</li>
+        <li class="activity-step">After lunch: write down one thing you learned that surprised you</li>
+      </ol>
+      <div class="activity-complete-btn"><input type="checkbox" id="act3" onchange="updateProgress()" style="accent-color:var(--navy);"><label for="act3" style="font-size:13px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer;">✓ Buddy lunch done</label></div>
+    </div>
+
+    <div style="display:flex;gap:10px;"><button class="link-btn outline" onclick="pingSheet('NetSuite'); showPanel('day2',null)">← Day 2</button><button class="link-btn primary" onclick="pingSheet('Day 3'); showPanel('day4',null)">Day 4 →</button></div>
+  </div>
+
+  <!-- ══ DAY 4 ══ -->
+  <div class="panel" id="panel-day4">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Day 4</div>
+      <div class="panel-title">Department Head <em>Meeting</em></div>
+      <div class="panel-desc">Today you hear the big picture from your Department Head — where the team is, where it's going, and how you fit in.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon navy">🏛️</div><div><div class="card-title">Discussion Agenda</div><div class="card-subtitle">Context · ~60 mins</div></div></div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="d4c1" onchange="updateProgress()"><label for="d4c1"><strong>Department overview</strong> — current state, key projects, ongoing priorities</label></li>
+        <li class="check-item"><input type="checkbox" id="d4c2" onchange="updateProgress()"><label for="d4c2"><strong>Where we're headed</strong> — goals and direction this year</label></li>
+        <li class="check-item"><input type="checkbox" id="d4c3" onchange="updateProgress()"><label for="d4c3"><strong>Your role in the bigger picture</strong> — how you connect to team goals</label></li>
+        <li class="check-item"><input type="checkbox" id="d4c4" onchange="updateProgress()"><label for="d4c4"><strong>L10 Meeting introduction</strong> — Hanston's weekly team cadence</label></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon gold">🔄</div><div><div class="card-title">About L10 Meetings (EOS)</div><div class="card-subtitle">Process — Entrepreneurial Operating System</div></div></div>
+      <div class="accordion">
+        <button class="accordion-trigger" onclick="toggleAccordion(this)">What is an L10? <span class="acc-icon">▾</span></button>
+        <div class="accordion-body"><p style="font-size:13px;color:var(--text-muted);line-height:1.7;padding-top:10px;">The Level 10 (L10) Meeting is a structured 90-minute weekly meeting across all Hanston teams. Fixed agenda: check-ins, scorecard review, headlines, To-Do review, IDS (Identify, Discuss, Solve). The goal: resolve the right issues every single week.</p></div>
+      </div>
+      <div class="accordion">
+        <button class="accordion-trigger" onclick="toggleAccordion(this)">What should I know going in? <span class="acc-icon">▾</span></button>
+        <div class="accordion-body"><ul style="font-size:13px;color:var(--text-muted);line-height:1.9;padding-top:10px;padding-left:18px;"><li>Every team member has measurable numbers they report each week</li><li>Issues are "parked" and solved in a structured format</li><li>Everyone comes prepared — no surprises</li><li>Your manager will orient you on your scorecard contribution</li></ul></div>
+      </div>
+      <ul class="checklist" style="margin-top:12px;">
+        <li class="check-item"><input type="checkbox" id="d4c5" onchange="updateProgress()"><label for="d4c5">Sat in on (or will observe) an L10 meeting this week</label></li>
+        <li class="check-item"><input type="checkbox" id="d4c6" onchange="updateProgress()"><label for="d4c6">Understand how L10 relates to your role's KPIs</label></li>
+      </ul>
+    </div>
+
+    <!-- QUIZ 3 -->
+    <div class="quiz-card">
+      <div class="quiz-header"><span class="quiz-badge">🧠 Quick Check — Process & EOS</span></div>
+      <div id="quiz3-container"></div>
+    </div>
+
+    <!-- OFFLINE ACTIVITY: Shadow an L10 -->
+    <div class="activity-card">
+      <div class="activity-tag offline">☀️ Offline Activity</div>
+      <div class="activity-title">Shadow an L10 Meeting</div>
+      <div class="activity-desc">Your manager will invite you to observe an L10 meeting this week. Come ready to observe and take notes — you're not expected to contribute yet.</div>
+      <ol class="activity-steps">
+        <li class="activity-step">Accept the calendar invite for the L10 your manager sends you</li>
+        <li class="activity-step">Bring a notebook — note down: who speaks, what gets "parked," and how IDS runs</li>
+        <li class="activity-step">After the meeting, ask your manager: <em>"What's my scorecard number going to be?"</em></li>
+        <li class="activity-step">Write down 3 things you observed about how the team works</li>
+      </ol>
+      <div class="activity-complete-btn"><input type="checkbox" id="act4" onchange="updateProgress()" style="accent-color:var(--navy);"><label for="act4" style="font-size:13px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer;">✓ Observed my first L10</label></div>
+    </div>
+
+    <div style="display:flex;gap:10px;"><button class="link-btn outline" onclick="pingSheet('Day 2'); showPanel('day3',null)">← Day 3</button><button class="link-btn primary" onclick="pingSheet('Day 4'); showPanel('week2',null)">Week 2 →</button></div>
+  </div>
+
+  <!-- ══ WEEK 2 ══ -->
+  <div class="panel" id="panel-week2">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Days 5–10</div>
+      <div class="panel-title">Week 2: <em>Deep Dives</em></div>
+      <div class="panel-desc">Week 2 is where context becomes capability. You go deeper into your tools, meet cross-functional teams, and begin contributing in a real way.</div>
+    </div>
+
+    <div class="w2-track">
+      <div class="w2-track-card"><div class="w2-track-icon">🔧</div><div class="w2-track-title">Tools Deep Dive</div><div class="w2-track-desc">Hands-on sessions with Google Workspace, NetSuite, and AI tools. You'll get beyond the basics.</div></div>
+      <div class="w2-track-card"><div class="w2-track-icon">🤝</div><div class="w2-track-title">Cross-Team Context</div><div class="w2-track-desc">1:1 meetings with team leads and department heads you scheduled on Day 2.</div></div>
+      <div class="w2-track-card"><div class="w2-track-icon">🤖</div><div class="w2-track-title">AI-First Onboarding</div><div class="w2-track-desc">Learn how Hanston uses Claude and Gemini in real work — with hands-on exercises.</div></div>
+      <div class="w2-track-card"><div class="w2-track-icon">🎯</div><div class="w2-track-title">Practicum Begins</div><div class="w2-track-desc">You'll take on your first real task or deliverable with your manager's guidance.</div></div>
+    </div>
+
+    <!-- DAY 5 -->
+    <div class="card">
+      <div class="card-header"><div class="card-icon navy">5️⃣</div><div><div class="card-title">Day 5 — Google Workspace Deep Dive</div><div class="card-subtitle">Tooling + Process</div></div></div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="w2c1" onchange="updateProgress()"><label for="w2c1">Set up <strong>Google Drive folder structure</strong> for your work files</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c2" onchange="updateProgress()"><label for="w2c2">Learn how to use <strong>Google Shared Drives</strong> (where team files live)</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c3" onchange="updateProgress()"><label for="w2c3">Configure <strong>Google Calendar</strong> — working hours, notification preferences</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c4" onchange="updateProgress()"><label for="w2c4">Create your first <strong>Google Doc report</strong> — a summary of your Week 1 (see activity below)</label></li>
+      </ul>
+      <div class="activity-card" style="margin-top:14px;border:none;padding:0;">
+        <div class="activity-tag online" style="margin-bottom:10px;">💻 Online Activity</div>
+        <div class="activity-title">Write Your Week 1 Reflection</div>
+        <div class="activity-desc">Create a Google Doc and write a short reflection on Week 1. Share it with your manager.</div>
+        <ol class="activity-steps">
+          <li class="activity-step">Open Google Docs → New Document</li>
+          <li class="activity-step">Title it: <em>"[Your Name] — Week 1 Reflection"</em></li>
+          <li class="activity-step">Write 3 sections: What I learned · Who I met · What I want to understand better</li>
+          <li class="activity-step">Share it with your manager (View access)</li>
+        </ol>
+        <div class="activity-complete-btn"><input type="checkbox" id="act5" onchange="updateProgress()" style="accent-color:var(--navy);"><label for="act5" style="font-size:13px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer;">✓ Week 1 reflection written and shared</label></div>
+      </div>
+    </div>
+
+    <!-- DAY 6-7 -->
+    <div class="card">
+      <div class="card-header"><div class="card-icon gold">6️⃣7️⃣</div><div><div class="card-title">Days 6–7 — Cross-Team Meetings</div><div class="card-subtitle">Relationships + Context</div></div></div>
+      <div class="info-box">These are the 1:1 meetings you scheduled on Day 2. Come prepared with questions for each person.</div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="w2c5" onchange="updateProgress()"><label for="w2c5">Met with <strong>Finance / Accounting</strong> team lead</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c6" onchange="updateProgress()"><label for="w2c6">Met with <strong>Operations</strong> team lead</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c7" onchange="updateProgress()"><label for="w2c7">Met with <strong>Leasing / Property Management</strong> team lead</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c8" onchange="updateProgress()"><label for="w2c8">Met with any other <strong>key stakeholders</strong> identified by manager</label></li>
+      </ul>
+      <div class="activity-card" style="margin-top:14px;border:none;padding:0;">
+        <div class="activity-tag offline" style="margin-bottom:10px;">☀️ Offline Activity</div>
+        <div class="activity-title">Cross-Team Bingo</div>
+        <div class="activity-desc">Turn your cross-team meetings into a light discovery game. In each meeting, find out one thing about each team.</div>
+        <ol class="activity-steps">
+          <li class="activity-step">Ask: <em>"What's one thing your team is working on right now that I should know about?"</em></li>
+          <li class="activity-step">Ask: <em>"How does your team typically work with [your department]?"</em></li>
+          <li class="activity-step">After 4 meetings: share your notes with your manager — what did you learn that connected the dots?</li>
+        </ol>
+        <div class="activity-complete-btn"><input type="checkbox" id="act6" onchange="updateProgress()" style="accent-color:var(--navy);"><label for="act6" style="font-size:13px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer;">✓ Cross-team meetings complete</label></div>
+      </div>
+    </div>
+
+    <!-- DAY 8: AI Tools -->
+    <div class="card">
+      <div class="card-header"><div class="card-icon gold">🤖</div><div><div class="card-title">Day 8 — AI-First: Claude & Gemini</div><div class="card-subtitle">AI-First Pillar</div></div></div>
+      <div class="info-box">Hanston is building an AI-first culture. This session is hands-on — you'll actually use both tools for real tasks.</div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="w2c9" onchange="updateProgress()"><label for="w2c9">Create a <strong>Claude account</strong> (claude.ai) and log in</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c10" onchange="updateProgress()"><label for="w2c10">Complete the <strong>Claude activity</strong> below</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c11" onchange="updateProgress()"><label for="w2c11">Explore <strong>Gemini in Google Docs</strong> — try the "Help me write" feature</label></li>
+      </ul>
+      <div class="activity-card" style="margin-top:14px;border:none;padding:0;">
+        <div class="activity-tag online" style="margin-bottom:10px;">💻 Online Activity — Claude</div>
+        <div class="activity-title">Write an Email with Claude</div>
+        <div class="activity-desc">Use Claude to draft a professional email for a real scenario at work.</div>
+        <ol class="activity-steps">
+          <li class="activity-step">Open <a href="https://claude.ai" target="_blank" style="color:var(--navy);font-weight:600;">claude.ai</a> → start a new conversation</li>
+          <li class="activity-step">Type this prompt: <em>"Write a professional email requesting a meeting with [Name], [Title], to introduce myself as the new [your role] and get context on how we'll work together. Keep it short and direct."</em></li>
+          <li class="activity-step">Read Claude's draft — edit it to match your voice</li>
+          <li class="activity-step">Send the actual email using Claude's draft as a starting point</li>
+        </ol>
+        <div class="activity-complete-btn"><input type="checkbox" id="act7" onchange="updateProgress()" style="accent-color:var(--navy);"><label for="act7" style="font-size:13px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer;">✓ Used Claude for a real work email</label></div>
+        <div class="action-row" style="margin-top:10px;"><a href="https://claude.ai" target="_blank" class="link-btn primary">Open Claude ↗</a><a href="https://gemini.google.com" target="_blank" class="link-btn outline">Open Gemini ↗</a></div>
+      </div>
+    </div>
+
+    <!-- QUIZ 4 -->
+    <div class="quiz-card">
+      <div class="quiz-header"><span class="quiz-badge">🧠 Week 2 Check — Tools & AI</span></div>
+      <div id="quiz4-container"></div>
+    </div>
+
+    <!-- DAY 9-10: Practicum -->
+    <div class="card">
+      <div class="card-header"><div class="card-icon green">🎯</div><div><div class="card-title">Days 9–10 — Practicum: First Real Deliverable</div><div class="card-subtitle">Practicum Pillar</div></div></div>
+      <div class="info-box">You learn by doing. By the end of Week 2, you'll have completed a real piece of work — not a training exercise.</div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="w2c12" onchange="updateProgress()"><label for="w2c12">Agreed on your <strong>first deliverable</strong> with your manager</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c13" onchange="updateProgress()"><label for="w2c13">Set your <strong>30-day rock</strong> with your manager (your first quarterly priority)</label></li>
+        <li class="check-item"><input type="checkbox" id="w2c14" onchange="updateProgress()"><label for="w2c14">Completed and submitted your <strong>first deliverable</strong></label></li>
+        <li class="check-item"><input type="checkbox" id="w2c15" onchange="updateProgress()"><label for="w2c15">Attended your first full <strong>L10 meeting</strong> as a participant</label></li>
+      </ul>
+      <div class="activity-card" style="margin-top:14px;border:none;padding:0;">
+        <div class="activity-tag offline" style="margin-bottom:10px;">☀️ Offline Activity</div>
+        <div class="activity-title">30-Day Rock Setting with Your Manager</div>
+        <div class="activity-desc">In EOS, a "Rock" is your most important priority for the quarter. Your first one covers your first 30 days.</div>
+        <ol class="activity-steps">
+          <li class="activity-step">Ask your manager: <em>"What's the one thing I could do in 30 days that would make the biggest difference?"</em></li>
+          <li class="activity-step">Write it as a SMART goal: Specific, Measurable, Achievable, Relevant, Time-bound</li>
+          <li class="activity-step">Agree on how you'll measure success</li>
+          <li class="activity-step">Write it down and save it — you'll report on it in your first L10</li>
+        </ol>
+        <div class="activity-complete-btn"><input type="checkbox" id="act8" onchange="updateProgress()" style="accent-color:var(--navy);"><label for="act8" style="font-size:13px;font-weight:600;color:var(--navy);margin-left:6px;cursor:pointer;">✓ 30-day rock set and confirmed</label></div>
+      </div>
+    </div>
+
+    <div class="card" style="border:2px solid var(--navy);">
+      <div class="card-header"><div class="card-icon navy">🏁</div><div><div class="card-title">Week 2 Completion Checklist</div><div class="card-subtitle">You're almost done with your onboarding!</div></div></div>
+      <ul class="checklist">
+        <li class="check-item"><input type="checkbox" id="w2eod1" onchange="updateProgress()"><label for="w2eod1">Week 1 reflection doc shared with manager</label></li>
+        <li class="check-item"><input type="checkbox" id="w2eod2" onchange="updateProgress()"><label for="w2eod2">All cross-team meetings completed</label></li>
+        <li class="check-item"><input type="checkbox" id="w2eod3" onchange="updateProgress()"><label for="w2eod3">Claude and Gemini both used for real tasks</label></li>
+        <li class="check-item"><input type="checkbox" id="w2eod4" onchange="updateProgress()"><label for="w2eod4">First deliverable completed</label></li>
+        <li class="check-item"><input type="checkbox" id="w2eod5" onchange="updateProgress()"><label for="w2eod5">30-day rock confirmed with manager</label></li>
+        <li class="check-item"><input type="checkbox" id="w2eod6" onchange="updateProgress()"><label for="w2eod6">Participated in first L10</label></li>
+      </ul>
+      <div class="action-row" style="margin-top:16px;"><button class="link-btn primary" onclick="pingSheet('Week 2'); showPanel('summary',null)">🖨 View My Onboarding Summary →</button></div>
+    </div>
+  </div>
+
+  <!-- ══ PILLARS ══ -->
+  <div class="panel" id="panel-pillars">
+    <div class="panel-header"><div class="panel-eyebrow">Full Onboarding Program</div><div class="panel-title">Six <em>Pillars</em></div><div class="panel-desc">Each pillar is woven across your first two weeks. Here's what each one covers.</div></div>
+    <div class="card"><div class="card-header"><div class="card-icon navy">🤝</div><div><div class="card-title">1. Relationships</div><div class="card-subtitle">People & connections</div></div></div><p style="font-size:13.5px;color:var(--text-muted);line-height:1.7;margin-bottom:10px;">You'll meet your manager, team, buddy, department head, and cross-functional leads. The goal: feel like you belong by end of Week 1.</p></div>
+    <div class="card"><div class="card-header"><div class="card-icon gold">🏢</div><div><div class="card-title">2. Context</div><div class="card-subtitle">Company knowledge</div></div></div><p style="font-size:13.5px;color:var(--text-muted);line-height:1.7;">Understanding Hanston — our story, values, how each team operates, and where the company is going.</p></div>
+    <div class="card"><div class="card-header"><div class="card-icon green">⚙️</div><div><div class="card-title">3. Tooling</div><div class="card-subtitle">Systems we use</div></div></div><div class="tool-grid"><div class="tool-card"><div class="tool-icon">📧</div><div><div class="tool-name">Google Workspace</div><div class="tool-desc">Email, Drive, Docs, Calendar</div></div></div><div class="tool-card"><div class="tool-icon">📊</div><div><div class="tool-name">NetSuite</div><div class="tool-desc">Finance & operations</div></div></div><div class="tool-card"><div class="tool-icon">💬</div><div><div class="tool-name">Viber</div><div class="tool-desc">Team communication</div></div></div><div class="tool-card"><div class="tool-icon">🤖</div><div><div class="tool-name">Claude + Gemini</div><div class="tool-desc">AI-powered tools</div></div></div></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon red">📋</div><div><div class="card-title">4. Process</div><div class="card-subtitle">How we work (EOS)</div></div></div><ul style="font-size:13px;color:var(--text-muted);line-height:2;padding-left:18px;"><li>L10 meetings — weekly team cadence</li><li>Rocks — quarterly priorities</li><li>Scorecards — individual accountability</li><li>IDS — structured problem-solving</li></ul></div>
+    <div class="card"><div class="card-header"><div class="card-icon gold">🤖</div><div><div class="card-title">5. AI-First</div><div class="card-subtitle">Tools for you</div></div></div><p style="font-size:13.5px;color:var(--text-muted);line-height:1.7;margin-bottom:10px;">Claude and Gemini are standard tools at Hanston. By Week 2, you'll have used both for real work.</p><div class="action-row"><a href="https://claude.ai" target="_blank" class="link-btn primary">Open Claude ↗</a><a href="https://gemini.google.com" target="_blank" class="link-btn outline">Open Gemini ↗</a></div></div>
+    <div class="card"><div class="card-header"><div class="card-icon navy">🎯</div><div><div class="card-title">6. Practicum</div><div class="card-subtitle">Hands-on work</div></div></div><p style="font-size:13.5px;color:var(--text-muted);line-height:1.7;">Your first real deliverable + your 30-day Rock. You learn by doing — and you'll have something to show for Week 2.</p></div>
+  </div>
+
+  <!-- ══ CULTURE PLAYBOOK ══ -->
+  <div class="panel" id="panel-culture">
+    <div class="panel-header"><div class="panel-eyebrow">Reference</div><div class="panel-title">Culture <em>Playbook</em></div><div class="panel-desc">Read this. Know it. It's who we are at Hanston.</div></div>
+    <div class="action-row no-print" style="margin-bottom:16px;">
+      <a href="https://acglinoga.my.canva.site/hanston-culture-playbook" target="_blank" class="link-btn primary">📖 Open Full Culture Playbook ↗</a>
+    </div>
+    <div class="iframe-wrapper">
+      <iframe src="https://acglinoga.my.canva.site/hanston-culture-playbook" title="Hanston Culture Playbook" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="note-box" style="margin-top:14px;">If the embedded view doesn't load properly, use the button above to open it in a new tab.</div>
+  </div>
+
+  <!-- ══ SUMMARY ══ -->
+  <div class="panel" id="panel-summary">
+    <div class="print-header">
+      <div class="ph-brand">HANSTON PROPERTIES</div>
+      <div class="ph-sub">Employee Onboarding Summary — Printed from the Onboarding Portal</div>
+      <div class="ph-date" id="printDate"></div>
+    </div>
+    <div class="panel-header no-print">
+      <div class="panel-eyebrow">Onboarding Summary</div>
+      <div class="panel-title">My <em>Summary</em></div>
+      <div class="panel-desc">A snapshot of your onboarding progress. Print this and keep it, or share it with your manager at the end of Week 2.</div>
+    </div>
+    <div class="print-btn-row no-print">
+      <button class="link-btn primary" id="printBtn" onclick="doPrint()">🖨 Print / Save as PDF</button>
+      <button class="link-btn outline" onclick="updateSummary()">🔄 Refresh Summary</button>
+    </div>
+
+    <div class="summary-section">
+      <div class="summary-section-title">Employee Details</div>
+      <div class="summary-row"><span class="summary-key">Full Name</span><span class="summary-val" id="sum-name">—</span></div>
+      <div class="summary-row"><span class="summary-key">Official Job Title</span><span class="summary-val" id="sum-title">—</span></div>
+      <div class="summary-row"><span class="summary-key">Division / Property</span><span class="summary-val" id="sum-div">—</span></div>
+      <div class="summary-row"><span class="summary-key">Overall Progress</span><span class="summary-val" id="sum-pct">0%</span></div>
+    </div>
+
+    <div class="summary-section">
+      <div class="summary-section-title">Week 1 — Key Checkpoints</div>
+      <div id="sum-week1-items"></div>
+    </div>
+
+    <div class="summary-section">
+      <div class="summary-section-title">Week 2 — Key Checkpoints</div>
+      <div id="sum-week2-items"></div>
+    </div>
+
+    <div class="summary-section">
+      <div class="summary-section-title">Activities Completed</div>
+      <div id="sum-activities"></div>
+    </div>
+
+    <div class="summary-section">
+      <div class="summary-section-title">Quiz Performance</div>
+      <div id="sum-quiz"></div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ORG CHART MODAL -->
+<div id="orgModal" style="display:none;position:fixed;inset:0;background:rgba(15,30,56,.8);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:#fff;border-radius:16px;padding:28px;max-width:700px;width:90%;max-height:80vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:var(--navy);">Hanston Org Chart</div>
+      <button onclick="closeOrgModal()" style="border:none;background:var(--cream);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;color:var(--navy);font-weight:600;">✕ Close</button>
+    </div>
+    <div class="note-box">The full org chart will be provided by HR. Ask your manager or HR for the latest version via Google Drive.</div>
+    <div style="background:var(--cream);border-radius:10px;padding:28px;text-align:center;">
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">Simplified structure for reference:</div>
+      <div style="font-family:'Libre Baskerville',serif;font-size:15px;color:var(--navy);font-weight:700;margin-bottom:6px;">Hanston Properties</div>
+      <div style="display:flex;justify-content:center;gap:3px;margin-bottom:6px;font-size:11px;color:var(--text-muted);">├──────┬──────┤</div>
+      <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:10px;">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--navy);">Hanston Building (Hanston Building (HB)</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--navy);">Hanston Square (HS)</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--navy);">Northbank (NB)</div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:10px;">
+        <div style="background:rgba(25,49,91,.06);border-radius:6px;padding:7px 12px;font-size:11px;color:var(--navy);">People & Culture</div>
+        <div style="background:rgba(25,49,91,.06);border-radius:6px;padding:7px 12px;font-size:11px;color:var(--navy);">Finance</div>
+        <div style="background:rgba(25,49,91,.06);border-radius:6px;padding:7px 12px;font-size:11px;color:var(--navy);">Operations</div>
+        <div style="background:rgba(25,49,91,.06);border-radius:6px;padding:7px 12px;font-size:11px;color:var(--navy);">Leasing & Sales</div>
+        <div style="background:rgba(25,49,91,.06);border-radius:6px;padding:7px 12px;font-size:11px;color:var(--navy);">Property Management</div>
+      </div>
+    </div>
+    <div class="action-row" style="margin-top:14px;">
+      <a href="https://drive.google.com" target="_blank" class="link-btn primary">📂 Request Full Org Chart from HR</a>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ Done!</div>
+
+<script>
+// ── QUIZ DATA ──
+const quizzes = {
+  1: [
+    {
+      q: "In what year was Hanston Properties founded?",
+      opts: ["2005","1973","2012","1999"],
+      ans: 1,
+      explain: "Hanston Properties was founded in 1973. This is part of our company history covered in the Culture Handbook."
+    },
+    {
+      q: "What are Hanston's five core values? (ASHRG)",
+      opts: [
+        "Accountability, Sincerity, Humility, Respect, Growth",
+        "Accountability, Straightforwardness, Honesty, Respect, Growth",
+        "Agility, Strength, Honesty, Reliability, Growth",
+        "Accountability, Speed, Honesty, Relationships, Grit"
+      ],
+      ans: 1,
+      explain: "ASHRG: Accountability, Straightforwardness, Honesty, Respect, Growth. These are our core values — you'll live them every day here."
+    },
+    {
+      q: "Which of these is Hanston's EVP campaign tagline?",
+      opts: [
+        "Growing Together, Always",
+        "Where Careers Begin",
+        "Here at Hanston, careers are built to last",
+        "People First, Always"
+      ],
+      ans: 2,
+      explain: '"Here at Hanston, careers are built to last" is our EVP campaign tagline. It reflects our commitment to long-term careers and quality work.'
+    }
+  ],
+  2: [
+    {
+      q: "What is the primary communication tool used for team chats at Hanston?",
+      opts: ["Slack","WhatsApp","Viber","Microsoft Teams"],
+      ans: 2,
+      explain: "Viber is Hanston's primary team communication platform. You should already be in your team Viber group by now!"
+    },
+    {
+      q: "How many properties does Hanston currently operate across?",
+      opts: ["2 (HS and NB)","4 (HS, NB, HB, and one more)","3 (Hanston Square, Northbank, Hanston Building)","1 flagship property"],
+      ans: 2,
+      explain: "Hanston operates across three properties: Hanston Square (HS), Northbank (NB), and Hanston Building (Hanston Building (HB)."
+    }
+  ],
+  3: [
+    {
+      q: "What does 'L10' stand for in the context of Hanston's weekly meetings?",
+      opts: ["Level 10 Meeting","Last 10 Agenda Items","Leadership 10-Point Check","10-Minute Leadership Update"],
+      ans: 0,
+      explain: "L10 = Level 10 Meeting. It's part of the EOS (Entrepreneurial Operating System) framework that Hanston runs on."
+    },
+    {
+      q: "In an EOS L10 meeting, what does 'IDS' stand for?",
+      opts: [
+        "Identify, Delegate, Solve",
+        "Issues, Discuss, Scale",
+        "Identify, Discuss, Solve",
+        "Implement, Decide, Ship"
+      ],
+      ans: 2,
+      explain: "IDS = Identify, Discuss, Solve. It's the structured problem-solving format used in every L10 — the most important part of the meeting."
+    },
+    {
+      q: "What is a 'Rock' in EOS terminology?",
+      opts: [
+        "A difficult team member",
+        "A quarterly priority or goal",
+        "A mandatory weekly report",
+        "A type of company meeting"
+      ],
+      ans: 1,
+      explain: "A Rock is your most important priority for the quarter. Your first 30-day Rock will be set with your manager in Week 2."
+    }
+  ],
+  4: [
+    {
+      q: "Which AI tool is primarily used for writing, analysis, and document creation at Hanston?",
+      opts: ["ChatGPT","Gemini","Claude","Copilot"],
+      ans: 2,
+      explain: "Claude (claude.ai) is the primary AI writing and analysis tool at Hanston. Gemini is used for Google Workspace integration."
+    },
+    {
+      q: "What is Hanston's flagship commercial development at Northbank?",
+      opts: ["Hanston Tower","One Mill Avenue","The Northbank Centre","Mandaluyong Business Hub"],
+      ans: 1,
+      explain: "One Mill Avenue at the North Bank Business District in Mandaluyong is Hanston's flagship commercial development, with LEED Gold and WELL certifications."
+    }
+  ]
+};
+
+const quizState = { 1:{score:0,done:0,total:0}, 2:{score:0,done:0,total:0}, 3:{score:0,done:0,total:0}, 4:{score:0,done:0,total:0} };
+
+function buildQuiz(num, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const qs = quizzes[num];
+  quizState[num].total = qs.length;
+  // Build score dots
+  const dotsEl = document.getElementById('qdots' + num);
+  if (dotsEl) {
+    dotsEl.innerHTML = qs.map((_,i) => `<div class="quiz-score-dot" id="qdot-${num}-${i}"></div>`).join('');
+  }
+  container.innerHTML = qs.map((q, qi) => `
+    <div style="margin-bottom:${qi < qs.length-1 ? '24px':'0'};">
+      <div class="quiz-q">${qi+1}. ${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o,oi) => `
+          <div class="quiz-opt" id="qopt-${num}-${qi}-${oi}" onclick="answerQuiz(${num},${qi},${oi})">
+            <div class="quiz-opt-letter">${['A','B','C','D'][oi]}</div>
+            ${o}
+          </div>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb-${num}-${qi}"></div>
+    </div>
+  `).join('<div class="divider"></div>');
+}
+
+function answerQuiz(num, qi, choice) {
+  const q = quizzes[num][qi];
+  const isCorrect = choice === q.ans;
+  const opts = document.querySelectorAll(`[id^="qopt-${num}-${qi}-"]`);
+  opts.forEach(o => o.classList.add('disabled'));
+  const chosen = document.getElementById(`qopt-${num}-${qi}-${choice}`);
+  chosen.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    document.getElementById(`qopt-${num}-${qi}-${q.ans}`).classList.add('correct');
+  }
+  const fb = document.getElementById(`qfb-${num}-${qi}`);
+  fb.className = `quiz-feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+  fb.innerHTML = (isCorrect ? '✓ Correct! ' : '✗ Not quite. ') + q.explain;
+  // dots
+  const dot = document.getElementById(`qdot-${num}-${qi}`);
+  if (dot) dot.classList.add(isCorrect ? 'done-correct' : 'done-wrong');
+  if (isCorrect) quizState[num].score++;
+  quizState[num].done++;
+  if (quizState[num].done === quizState[num].total) {
+    showToast(`Quiz ${num} done! ${quizState[num].score}/${quizState[num].total} correct 🎉`);
+  }
+}
+
+// ── SETUP ──
+function startOnboarding() {
+  const name = document.getElementById('setupName').value.trim();
+  const title = document.getElementById('setupTitle').value.trim();
+  const div = document.getElementById('setupDiv').value;
+  if (!name || !title || !div) { alert('Please fill in all fields to continue.'); return; }
+  document.getElementById('setupOverlay').style.display = 'none';
+  document.getElementById('sidebarName').textContent = name;
+  document.getElementById('sidebarRole').textContent = title;
+  document.getElementById('sidebarDiv').textContent = div;
+  document.getElementById('sidebarInitial').textContent = name.charAt(0).toUpperCase();
+  // Pre-fill template inputs
+  ['introName','buddyName','sigName'].forEach(id => { const el = document.getElementById(id); if(el) el.placeholder = name; });
+  ['introRole','buddyRole','sigRole'].forEach(id => { const el = document.getElementById(id); if(el) el.placeholder = title; });
+  const sigDivEl = document.getElementById('sigDiv'); if(sigDivEl) sigDivEl.placeholder = div;
+  updateSummary();
+  saveState();
+}
+
+// ── PANEL NAV ──
+function showPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (el) {
+    el.classList.add('active');
+  } else {
+    document.querySelectorAll('.nav-item').forEach(function(n) {
+      var oc = n.getAttribute('onclick') || '';
+      if (oc.indexOf("'" + id + "'") !== -1) n.classList.add('active');
+    });
+  }
+  const map = {welcome:'Welcome',day1:'Day 1',netsuite:'NetSuite',day2:'Day 2',day3:'Day 3',day4:'Day 4',week2:'Week 2',pillars:'Pillars',culture:'Culture',summary:'Summary'};
+  document.getElementById('currentDayBadge').textContent = map[id] || 'Onboarding';
+  window.scrollTo(0, 0);
+  if (id === 'summary') updateSummary();
+}
+
+// ── PROGRESS ──
+function updateProgress() {
+  saveState();
+  const all = document.querySelectorAll('input[type="checkbox"]');
+  const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+  const pct = Math.round((checked / all.length) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('sum-pct').textContent = pct + '%';
+}
+
+// ── SUMMARY ──
+const week1Checks = [
+  {id:'c1',label:'Culture Handbook reviewed'},
+  {id:'c2',label:'Org Chart reviewed'},
+  {id:'c3',label:'Office policies reviewed'},
+  {id:'c4',label:'Finance policies reviewed'},
+  {id:'c5',label:'Gmail logged in'},
+  {id:'c6',label:'Email signature set up'},
+  {id:'c7',label:'Profile photo uploaded'},
+  {id:'c8',label:'NetSuite walkthrough done'},
+  {id:'c9',label:'All Viber groups joined'},
+  {id:'c10',label:'Viber intro sent'},
+  {id:'d2c1',label:'Met the team'},
+  {id:'d2c2',label:'Understood team daily tasks'},
+  {id:'d2c3',label:'Understood own role'},
+  {id:'d2c4',label:'Goals & expectations discussed'},
+  {id:'d3c3',label:'Buddy lunch done'},
+  {id:'d4c4',label:'L10 introduced'},
+];
+const week2Checks = [
+  {id:'w2c1',label:'Google Drive folder set up'},
+  {id:'w2c4',label:'Week 1 reflection written & shared'},
+  {id:'w2c5',label:'Met Finance/Accounting lead'},
+  {id:'w2c6',label:'Met Operations lead'},
+  {id:'w2c9',label:'Claude account created'},
+  {id:'w2c10',label:'Claude activity completed'},
+  {id:'w2c12',label:'First deliverable agreed'},
+  {id:'w2c14',label:'First deliverable completed'},
+  {id:'w2c15',label:'Participated in L10'},
+];
+const activities = [
+  {id:'act1',label:'Gmail profile setup (Online)'},
+  {id:'act2',label:'Calendar invites sent (Online)'},
+  {id:'act3',label:'Buddy lunch (Offline)'},
+  {id:'act4',label:'Observed L10 meeting (Offline)'},
+  {id:'act5',label:'Week 1 reflection doc (Online)'},
+  {id:'act6',label:'Cross-team meetings bingo (Offline)'},
+  {id:'act7',label:'Used Claude for real email (Online)'},
+  {id:'act8',label:'30-day rock set (Offline)'},
+];
+
+function renderSummaryChecks(items, containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = items.map(item => {
+    const cb = document.getElementById(item.id);
+    const done = cb && cb.checked;
+    return `<div class="summary-check-row">
+      <div class="summary-check-icon ${done ? 'done' : 'undone'}">${done ? '✓' : '—'}</div>
+      <span style="${done ? 'text-decoration:line-through;color:var(--text-muted)' : ''}">${item.label}</span>
+    </div>`;
+  }).join('');
+}
+
+function updateSummary() {
+  document.getElementById('sum-name').textContent = document.getElementById('sidebarName').textContent;
+  document.getElementById('sum-title').textContent = document.getElementById('sidebarRole').textContent;
+  document.getElementById('sum-div').textContent = document.getElementById('sidebarDiv').textContent;
+  const all = document.querySelectorAll('input[type="checkbox"]').length;
+  const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+  document.getElementById('sum-pct').textContent = Math.round((checked/all)*100) + '%';
+  renderSummaryChecks(week1Checks, 'sum-week1-items');
+  renderSummaryChecks(week2Checks, 'sum-week2-items');
+  renderSummaryChecks(activities, 'sum-activities');
+  // Quiz summary
+  const qEl = document.getElementById('sum-quiz');
+  if (qEl) {
+    qEl.innerHTML = [1,'ns',2,3,4].map(n => {
+      const s = quizState[n];
+      const labels = {1:'Day 1 — Company Knowledge',ns:'NetSuite Walkthroughs',2:'Day 2 — Team & Role',3:'Day 4 — Process & EOS',4:'Week 2 — Tools & AI'};
+      const pct = s.total ? Math.round((s.score/s.total)*100) : 0;
+      const color = pct >= 70 ? 'var(--success)' : pct > 0 ? 'var(--gold)' : 'var(--border)';
+      return `<div class="summary-row">
+        <span class="summary-key">${labels[n]}</span>
+        <span class="summary-val" style="color:${color}">${s.done === 0 ? 'Not attempted' : s.score + '/' + s.total + ' (' + pct + '%)'}</span>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ── COPY FUNCTIONS ──
+function copyViberIntro() {
+  const n = document.getElementById('introName').value || '[your name]';
+  const r = document.getElementById('introRole').value || '[your role]';
+  const m = document.getElementById('introMsg').value || '[your intro]';
+  navigator.clipboard.writeText(`Hi! I'm ${n}, the new ${r}. ${m}`).then(() => showToast('Viber message copied!'));
+}
+function copyBuddyMsg() {
+  const n = document.getElementById('buddyName').value || '[your name]';
+  const r = document.getElementById('buddyRole').value || '[your role]';
+  navigator.clipboard.writeText(`Hi there! I'm ${n}, the new ${r}. I was told to reach out because you're my new buddy. Looking forward to meeting you!`).then(() => showToast('Message copied!'));
+}
+function copySig() {
+  const n = document.getElementById('sigName').value || 'Your Name';
+  const r = document.getElementById('sigRole').value || 'Your Job Title';
+  const d = document.getElementById('sigDiv').value || 'Your Division';
+  navigator.clipboard.writeText(`${n}\n${r}\nHanston Properties | ${d}\nyourname@hanstonproperties.com`).then(() => showToast('Signature copied!'));
+}
+function markViberDone(btn) {
+  btn.textContent = '✓ Joined'; btn.style.background='var(--success)'; btn.disabled=true; btn.style.cursor='default';
+  showToast('Group joined!');
+}
+function toggleAccordion(t) { const b=t.nextElementSibling; t.classList.toggle('open'); b.classList.toggle('open'); }
+function showOrgChartModal() { document.getElementById('orgModal').style.display='flex'; }
+function closeOrgModal() { document.getElementById('orgModal').style.display='none'; }
+function showToast(msg) { const t=document.getElementById('toast'); t.textContent='✅ '+msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  buildQuiz(1,'quiz1-container');
+  buildQuiz(2,'quiz2-container');
+  buildQuiz(3,'quiz3-container');
+  buildQuiz(4,'quiz4-container');
+  // Make nav-item[1] show "active" day badge
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems[0].querySelector('.nav-dot').className = 'nav-dot active';
+});
+
+  // ── NETSUITE ROLE PICKER ──
+  function pickRole(role) {
+    var rfBtn = document.getElementById('rfBtn');
+    var mgrBtn = document.getElementById('mgrBtn');
+    var rfSec = document.getElementById('ns-rf');
+    var mgrSec = document.getElementById('ns-mgr');
+    rfBtn.style.borderColor = role === 'rf' ? 'var(--navy)' : 'var(--border)';
+    rfBtn.style.background = role === 'rf' ? 'rgba(25,49,91,.06)' : '#fff';
+    mgrBtn.style.borderColor = role === 'mgr' ? 'var(--gold)' : 'var(--border)';
+    mgrBtn.style.background = role === 'mgr' ? 'rgba(201,168,76,.07)' : '#fff';
+    rfSec.style.display = role === 'rf' ? 'block' : 'none';
+    mgrSec.style.display = role === 'mgr' ? 'block' : 'none';
+  }
+
+  // ── NETSUITE ACCORDION TOGGLE ──
+  function toggleNSacc(trigger) {
+    var body = trigger.nextElementSibling;
+    var icon = trigger.querySelector('.acc-icon');
+    var isOpen = body.classList.contains('open');
+    body.classList.toggle('open');
+    if (icon) icon.style.transform = isOpen ? '' : 'rotate(180deg)';
+  }
+
+  // ── PRINT FIX ──
+  function doPrint() {
+    updateSummary();
+    var pd = document.getElementById('printDate');
+    if (pd) pd.textContent = 'Generated: ' + new Date().toLocaleDateString('en-PH', {year:'numeric',month:'long',day:'numeric'});
+    var allPanels = document.querySelectorAll('.panel');
+    var wasActive = document.querySelector('.panel.active');
+    allPanels.forEach(function(p) { p.style.display = 'none'; });
+    var sumPanel = document.getElementById('panel-summary');
+    if (sumPanel) { sumPanel.style.display = 'block'; sumPanel.style.padding = '24px'; }
+    setTimeout(function() {
+      window.print();
+      setTimeout(function() {
+        allPanels.forEach(function(p) { p.style.display = ''; });
+        if (wasActive) wasActive.classList.add('active');
+      }, 600);
+    }, 250);
+  }
+
+  // ── NETSUITE QUIZ BUILD ──
+  if (!quizzes['ns']) {
+    quizzes['ns'] = [
+      {
+        q: "You need to file a leave in NetSuite. What is the correct path?",
+        opts: ["Transactions → Leave Request","Employee Center → Time Off → Request Time Off","HR Module → Leave Filing","Dashboard → My Requests"],
+        ans: 1,
+        explain: "Employee Center → Time Off → Request Time Off. File planned leaves at least 2 working days in advance."
+      },
+      {
+        q: "Regarding the MRF (Manpower Requisition Form), which statement is TRUE?",
+        opts: ["Any employee can file an MRF","You can edit the MRF after submission if you made a mistake","Once submitted, the MRF cannot be edited — triple-check before submitting","Manual MRFs are still accepted alongside the online one"],
+        ans: 2,
+        explain: "Once submitted, MRF details cannot be edited. Only Dept Heads and Managers can file. The online process fully replaces manual forms and wet signatures."
+      },
+      {
+        q: "For overtime filing, which is correct?",
+        opts: ["File before rendering, no approval needed","Get pre-approval from your direct lead BEFORE rendering OT","File within 5 days after rendering, no approval needed","Approval is only needed for OT over 4 hours"],
+        ans: 1,
+        explain: "OT must be pre-approved by your direct lead BEFORE it is rendered. OT filed without prior approval may not be compensated."
+      }
+    ];
+    quizState['ns'] = {score:0,done:0,total:0};
+    buildQuiz('ns', 'quizNS-container');
+  }
+
+
+  // ══ LOCALSTORAGE + SHEET TRACKING ══
+  var SCRIPT_URL = 'https://script.google.com/a/macros/hanstonproperties.com/s/AKfycbzWNSlPkEQ-PAom66oHWZ2vGXyo6mpXXs8s7it-1EKTycbnbRoy4nUyqN4RKk2h3Oy4mw/exec';
+  var LS_KEY = 'hanston_onboarding_v3';
+
+  function saveState() {
+    var name = (document.getElementById('sidebarName') || {}).textContent || '';
+    if (!name || name === 'New Employee') return;
+    var state = {
+      name: name,
+      title: (document.getElementById('sidebarRole') || {}).textContent || '',
+      division: (document.getElementById('sidebarDiv') || {}).textContent || '',
+      checks: {}
+    };
+    document.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
+      if (cb.id) state.checks[cb.id] = cb.checked;
+    });
+    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+
+  function loadState() {
+    var raw;
+    try { raw = localStorage.getItem(LS_KEY); } catch(e) { return false; }
+    if (!raw) return false;
+    var state;
+    try { state = JSON.parse(raw); } catch(e) { return false; }
+    if (!state || !state.name || state.name === 'New Employee') return false;
+
+    // Hide setup modal
+    var ov = document.getElementById('setupOverlay');
+    if (ov) ov.style.display = 'none';
+
+    // Restore sidebar
+    var av = document.getElementById('sidebarInitial') || document.getElementById('sAvatar');
+    if (av) av.textContent = state.name.charAt(0).toUpperCase();
+    var nm = document.getElementById('sidebarName') || document.getElementById('sNameD');
+    if (nm) nm.textContent = state.name;
+    var rl = document.getElementById('sidebarRole') || document.getElementById('sRoleD');
+    if (rl) rl.textContent = state.title;
+    var dv = document.getElementById('sidebarDiv') || document.getElementById('sDivD');
+    if (dv) dv.textContent = state.division;
+
+    // Pre-fill inputs
+    ['introName','buddyName','sigName','viN','bN','sigN'].forEach(function(id) {
+      var el = document.getElementById(id); if (el) el.placeholder = state.name;
+    });
+    ['introRole','buddyRole','sigRole','viR','bR','sigR'].forEach(function(id) {
+      var el = document.getElementById(id); if (el) el.placeholder = state.title;
+    });
+    ['sigDiv','sigDv'].forEach(function(id) {
+      var el = document.getElementById(id); if (el) el.placeholder = state.division;
+    });
+
+    // Restore checkboxes
+    if (state.checks) {
+      Object.keys(state.checks).forEach(function(id) {
+        var cb = document.getElementById(id);
+        if (cb) cb.checked = state.checks[id];
+      });
+    }
+
+    // Update progress bar
+    var upFn = typeof upd === 'function' ? upd : (typeof updateProgress === 'function' ? updateProgress : null);
+    if (upFn) upFn();
+
+    return true;
+  }
+
+  function pingSheet(day) {
+    var nameEl = document.getElementById('sidebarName') || document.getElementById('sNameD');
+    var titleEl = document.getElementById('sidebarRole') || document.getElementById('sRoleD');
+    var divEl = document.getElementById('sidebarDiv') || document.getElementById('sDivD');
+    var name = nameEl ? nameEl.textContent : '';
+    var title = titleEl ? titleEl.textContent : '';
+    var division = divEl ? divEl.textContent : '';
+    if (!name || name === 'New Employee' || name === '—') return;
+
+    // Quiz score for the day
+    var quizMap = {'Day 1':'1','NetSuite':'ns','Day 2':'2','Day 3':null,'Day 4':'3','Week 2':'4'};
+    var qKey = quizMap[day];
+    var quizScore = '—';
+    if (qKey && typeof quizState !== 'undefined' && quizState[qKey]) {
+      var qs = quizState[qKey];
+      quizScore = qs.done > 0 ? qs.score + '/' + qs.total : 'Not attempted';
+    }
+
+    // Overall progress
+    var all = document.querySelectorAll('input[type=checkbox]').length;
+    var checked = document.querySelectorAll('input[type=checkbox]:checked').length;
+    var pct = all > 0 ? Math.round(checked / all * 100) + '%' : '0%';
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name, title: title, division: division,
+        day: day + ' completed', quiz: quizScore, progress: pct
+      })
+    }).catch(function() {});
+  }
+
+  // Load saved state on page load
+
+
+</script>
+</body>
+</html>
