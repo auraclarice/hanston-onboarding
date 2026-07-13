@@ -298,17 +298,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
       <input class="setup-input" id="setupTitle" placeholder="e.g. Accounting Associate" />
     </div>
     <div class="setup-field">
-      <label class="setup-label">Division / Property</label>
-      <select class="setup-select" id="setupDiv">
-        <option value="">Select your division…</option>
-        <option value="Hanston Building (Hanston Building (HB)">Hanston Building (Hanston Building (HB)</option>
+      <label class="setup-label">Property</label>
+      <select class="setup-select" id="setupProp">
+        <option value="">Select your property…</option>
+        <option value="Hanston Building (Hanston Building (HB)">Hanston Building (HB)</option>
         <option value="Hanston Square (HS)">Hanston Square (HS)</option>
-        <option value="Northbank (NB)">Northbank (NB)</option>
-        <option value="People & Culture">People & Culture</option>
-        <option value="Finance">Finance</option>
-        <option value="Operations">Operations</option>
-        <option value="Leasing & Sales">Leasing & Sales</option>
-        <option value="Property Management">Property Management</option>
+        <option value="North Bank (NB)">Northbank (NB)</option>
+      </select>
+    </div>
+        <div class="setup-field">
+      <label class="setup-label">Department</label>
+      <select class="setup-select" id="setupDept">
+        <option value="">Select your department…</option>
+        <option value="Accounting and Finance">Accounting and Finance</option>
+        <option value="Building Operations - Admin">Building Operations - Admin</option>
+        <option value="Building Operations - Engineering">Building Operations - Engineering</option>
+        <option value="Building Operations - Maintenance">Building Operations - Maintenance</option>
+        <option value="Construction Project Management Office">Construction Project Management Office</option>
+        <option value="Engineering Design and  Development - Engineering">Engineering Design and Development - Engineering</option>
+        <option value="Executive Office">Executive Office</option>
+        <option value="Human Resources">Human Resources</option>
+        <option value="Leasing">Leasing</option>
+        <option value="Management">Management</option>
+        <option value="Purchasing"></option>
       </select>
     </div>
     <button class="setup-btn" onclick="startOnboarding()">Start My Onboarding →</button>
@@ -1102,7 +1114,8 @@ function answerQuiz(num, qi, choice) {
 function startOnboarding() {
   const name = document.getElementById('setupName').value.trim();
   const title = document.getElementById('setupTitle').value.trim();
-  const div = document.getElementById('setupDiv').value;
+  const prop = document.getElementById('setupProp').value;
+  const dept = document.getElementById('setupDept').value;
   if (!name || !title || !div) { alert('Please fill in all fields to continue.'); return; }
   document.getElementById('setupOverlay').style.display = 'none';
   document.getElementById('sidebarName').textContent = name;
