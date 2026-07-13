@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Hanston Ping Test</title>
+<style>
+body{font-family:sans-serif;max-width:500px;margin:60px auto;padding:20px;background:#f5f0e8;}
+h2{color:#19315B;}
+input{width:100%;padding:10px;margin:8px 0;border:1.5px solid #ddd;border-radius:6px;font-size:14px;box-sizing:border-box;}
+button{width:100%;padding:12px;background:#19315B;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+button:hover{background:#243f72;}
+#result{margin-top:20px;padding:14px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.ok{background:#eaf5ee;border:1px solid #2d7a4f;color:#2d7a4f;}
+.fail{background:#fdecea;border:1px solid #c0392b;color:#c0392b;}
+</style>
+</head>
+<body>
+<h2>Hanston Sheet Ping Test</h2>
+<p style="font-size:13px;color:#666;">This fires a direct POST to your Apps Script. Check your Sheet after clicking Send.</p>
+<input id="url" placeholder="Paste Apps Script URL here" value="https://script.google.com/a/macros/hanstonproperties.com/s/AKfycbzWNSlPkEQ-PAom66oHWZ2vGXyo6mpXXs8s7it-1EKTycbnbRoy4nUyqN4RKk2h3Oy4mw/exec">
+<input id="name" placeholder="Test name" value="Aura — GitHub Test">
+<button onclick="sendPing()">Send Test Ping</button>
+<div id="result"></div>
+
+<script>
+async function sendPing() {
+  var url = document.getElementById('url').value.trim();
+  var name = document.getElementById('name').value.trim();
+  var res = document.getElementById('result');
+  res.style.display = 'none';
+
+  var payload = {
+    name: name,
+    title: 'P&C Business Partner',
+    property: 'Hanston Building (HB)',
+    department: 'Human Resources',
+    day: 'TEST ping from GitHub Pages',
+    quiz: '3/3',
+    progress: '25%'
+  };
+
+  try {
+    await fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    res.className = 'ok';
+    res.style.display = 'block';
+    res.innerHTML = '✓ Fetch completed without error.<br><strong>Now check your Sheet</strong> — if a new row appeared, tracking is working.<br>If no row after 15 seconds, the Apps Script needs redeploying.';
+  } catch(err) {
+    res.className = 'fail';
+    res.style.display = 'block';
+    res.innerHTML = '✗ Fetch was blocked by the browser.<br>Error: ' + err.message;
+  }
+}
+</script>
+</body>
+</html>
