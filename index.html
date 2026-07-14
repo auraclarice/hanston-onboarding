@@ -1080,7 +1080,7 @@ function buildQuiz(num, containerId) {
       <div class="quiz-q">${qi+1}. ${q.q}</div>
       <div class="quiz-options">
         ${q.opts.map((o,oi) => `
-          <div class="quiz-opt" id="qopt-${num}-${qi}-${oi}" onclick="answerQuiz(${num},${qi},${oi})">
+          <div class="quiz-opt" id="qopt-${num}-${qi}-${oi}" onclick="answerQuiz('${num}',${qi},${oi})">
             <div class="quiz-opt-letter">${['A','B','C','D'][oi]}</div>
             ${o}
           </div>`).join('')}
