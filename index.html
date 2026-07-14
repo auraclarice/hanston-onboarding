@@ -1060,10 +1060,30 @@ const quizzes = {
       ans: 1,
       explain: "One Mill Avenue at the North Bank Business District in Mandaluyong is Hanston's flagship commercial development, with LEED Gold and WELL certifications."
     }
+  ],
+  ns: [
+    {
+      q: "You need to file a leave in NetSuite. What is the correct path?",
+      opts: ["Transactions → Leave Request","Employee Center → Time Off → Request Time Off","HR Module → Leave Filing","Dashboard → My Requests"],
+      ans: 1,
+      explain: "Employee Center → Time Off → Request Time Off. File planned leaves at least 2 working days in advance."
+    },
+    {
+      q: "Regarding the MRF (Manpower Requisition Form), which statement is TRUE?",
+      opts: ["Any employee can file an MRF","You can edit the MRF after submission if you made a mistake","Once submitted, the MRF cannot be edited — triple-check before submitting","Manual MRFs are still accepted alongside the online one"],
+      ans: 2,
+      explain: "Once submitted, MRF details cannot be edited. Only Dept Heads and Managers can file. The online process fully replaces manual forms and wet signatures."
+    },
+    {
+      q: "For overtime filing, which is correct?",
+      opts: ["File before rendering, no approval needed","Get pre-approval from your direct lead BEFORE rendering OT","File within 5 days after rendering, no approval needed","Approval is only needed for OT over 4 hours"],
+      ans: 1,
+      explain: "OT must be pre-approved by your direct lead BEFORE it is rendered. OT filed without prior approval may not be compensated."
+    }
   ]
 };
 
-const quizState = { 1:{score:0,done:0,total:0}, ns:{score:0,done:0,total:0}, 2:{score:0,done:0,total:0}, 3:{score:0,done:0,total:0}, 4:{score:0,done:0,total:0} };
+onst quizState = { 1:{score:0,done:0,total:0}, ns:{score:0,done:0,total:0}, 2:{score:0,done:0,total:0}, 3:{score:0,done:0,total:0}, 4:{score:0,done:0,total:0} };
 
 function buildQuiz(num, containerId) {
   const container = document.getElementById(containerId);
@@ -1329,31 +1349,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 250);
   }
 
-  // ── NETSUITE QUIZ BUILD ──
-  if (!quizzes['ns']) {
-    quizzes['ns'] = [
-      {
-        q: "You need to file a leave in NetSuite. What is the correct path?",
-        opts: ["Transactions → Leave Request","Employee Center → Time Off → Request Time Off","HR Module → Leave Filing","Dashboard → My Requests"],
-        ans: 1,
-        explain: "Employee Center → Time Off → Request Time Off. File planned leaves at least 2 working days in advance."
-      },
-      {
-        q: "Regarding the MRF (Manpower Requisition Form), which statement is TRUE?",
-        opts: ["Any employee can file an MRF","You can edit the MRF after submission if you made a mistake","Once submitted, the MRF cannot be edited — triple-check before submitting","Manual MRFs are still accepted alongside the online one"],
-        ans: 2,
-        explain: "Once submitted, MRF details cannot be edited. Only Dept Heads and Managers can file. The online process fully replaces manual forms and wet signatures."
-      },
-      {
-        q: "For overtime filing, which is correct?",
-        opts: ["File before rendering, no approval needed","Get pre-approval from your direct lead BEFORE rendering OT","File within 5 days after rendering, no approval needed","Approval is only needed for OT over 4 hours"],
-        ans: 1,
-        explain: "OT must be pre-approved by your direct lead BEFORE it is rendered. OT filed without prior approval may not be compensated."
-      }
-    ];
-    quizState['ns'] = {score:0,done:0,total:0};
-    buildQuiz('ns', 'quizNS-container');
-  }
+
 
 
   // ══ LOCALSTORAGE + SHEET TRACKING ══
