@@ -1063,7 +1063,7 @@ const quizzes = {
   ]
 };
 
-const quizState = { 1:{score:0,done:0,total:0}, 2:{score:0,done:0,total:0}, 3:{score:0,done:0,total:0}, 4:{score:0,done:0,total:0} };
+const quizState = { 1:{score:0,done:0,total:0}, ns:{score:0,done:0,total:0}, 2:{score:0,done:0,total:0}, 3:{score:0,done:0,total:0}, 4:{score:0,done:0,total:0} };
 
 function buildQuiz(num, containerId) {
   const container = document.getElementById(containerId);
@@ -1281,6 +1281,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildQuiz(2,'quiz2-container');
   buildQuiz(3,'quiz3-container');
   buildQuiz(4,'quiz4-container');
+  buildQuiz('ns','quizNS-container');
   // Make nav-item[1] show "active" day badge
   const navItems = document.querySelectorAll('.nav-item');
   navItems[0].querySelector('.nav-dot').className = 'nav-dot active';
