@@ -466,7 +466,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
         <div class="template-text" style="line-height:2;">
           <strong><input class="template-input" id="sigName" placeholder="Your Full Name" style="min-width:140px;font-size:14px;"></strong><br>
           <input class="template-input" id="sigRole" placeholder="Your Job Title" style="min-width:150px;"><br>
-          Hanston Properties &nbsp;|&nbsp; <input class="template-input" id="sigDiv" placeholder="Your Division" style="min-width:120px;"><br>
+          Hanston Properties &nbsp;|&nbsp; <input class="template-input" id="sigDiv" placeholder="Your Department" style="min-width:120px;"><br>
           <span style="color:var(--text-muted);">📧 yourname@hanstonproperties.com</span>
         </div>
         <button class="copy-btn" onclick="copySig()">📋 Copy Signature</button>
@@ -1014,7 +1014,7 @@ const quizzes = {
       q: "How many properties does Hanston currently operate across?",
       opts: ["2 (HS and NB)","4 (HS, NB, HB, and one more)","3 (Hanston Square, North Bank, Hanston Building)","1 flagship property"],
       ans: 2,
-      explain: "Hanston operates across three properties: Hanston Square (HS), North Bank (NB), and Hanston Building (Hanston Building (HB)."
+      explain: "Hanston operates across three properties: Hanston Square (HS), North Bank (NB), and Hanston Building (HB)."
     }
   ],
   3: [
@@ -1262,7 +1262,7 @@ function copyBuddyMsg() {
 function copySig() {
   const n = document.getElementById('sigName').value || 'Your Name';
   const r = document.getElementById('sigRole').value || 'Your Job Title';
-  const d = document.getElementById('sigDiv').value || 'Your Division';
+  const d = document.getElementById('sigDiv').value || 'Your Department';
   navigator.clipboard.writeText(`${n}\n${r}\nHanston Properties | ${d}\nyourname@hanstonproperties.com`).then(() => showToast('Signature copied!'));
 }
 function markViberDone(btn) {
